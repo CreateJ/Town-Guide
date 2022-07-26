@@ -10,7 +10,7 @@ import (
 func main() {
 	app := iris.New()
 	mvc.Configure(app.Party("/user"), userController)
-	app.Run(iris.Addr(":8080"))
+	app.Run(iris.TLS(":433","a.crt","b.key"))
 }
 
 func userController(app *mvc.Application) {
