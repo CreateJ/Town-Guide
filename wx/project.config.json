@@ -51,5 +51,7 @@
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
-  }
+  },
+  "srcMiniprogramRoot": "dist/",
+  "miniprogramRoot": "dist/"
 }
