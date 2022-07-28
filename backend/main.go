@@ -42,7 +42,7 @@ func main() {
 	a := service.NewUserService()
 	groupRouter := app.Party("/user")
 	groupRouter.Get("/getUserInfo", a.GetUserInfo)
-	//groupRouter.Get("/getUserOpenId", a.GetUserOpenID)
+	// groupRouter.Get("/getUserOpenId", a.GetUserOpenID)
 	groupRouter.Post("/register", a.Register)
 
 	//app.Run(iris.Addr(":8080"))
