@@ -38,7 +38,8 @@ func (u *UserServiceApi) GetUserOpenID(ctx iris.Context) {
 
 	openID := model.GetUserOpenID(dto.Code)
 	if openID == "" {
-		ctx.JSON(Response{ErrorCode, "获取不到openID", nil})
+		ctx.JSON(Response{ErrorCode, "获取不到openID,请检查参数是否有效", nil})
+		return
 	}
 
 	result := map[string]string{
