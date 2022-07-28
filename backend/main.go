@@ -42,8 +42,8 @@ func main() {
 	a := service.NewUserService()
 	groupRouter := app.Party("/user")
 	groupRouter.Get("/getUserInfo", a.GetUserInfo)
-	groupRouter.Get("/getUserOpenId", a.GetUserOpenID)
-	groupRouter.Get("/create", a.GetUserInfo)
+	//groupRouter.Get("/getUserOpenId", a.GetUserOpenID)
+	groupRouter.Post("/register", a.Register)
 
 	//app.Run(iris.Addr(":8080"))
 	app.Run(iris.TLS(":443","a.crt","b.key"))

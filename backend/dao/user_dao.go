@@ -1,14 +1,15 @@
 package dao
 
 import (
+	"fmt"
 	"github.com/sirupsen/logrus"
 	"github.com/tietang/dbx"
 	"town-guide/base"
 )
 
-type UserInfo struct {
+type TbUserInfo struct {
 	Id         int64  `db:"id,omitempty"`
-	OpenID     string `db:"open_id,uni"`
+	OpenID     string `db:"open_id,unique"`
 	NickName   string `db:"nick_name"`
 	Url        string `db:"url"`
 	Gender     int8   `db:"gender"`
@@ -24,9 +25,13 @@ func GetUserDao() userDao {
 	}
 }
 
-func (dao *userDao) GetOne(openID string) *UserInfo {
-	a := &UserInfo{OpenID: openID}
+func (dao *userDao) GetOne(openID string) *TbUserInfo {
+	a := &TbUserInfo{OpenID: openID}
 	ok, err := dao.runner.GetOne(a)
+	fmt.Println(*a)
+	fmt.Print(ok)
+	fmt.Print(err)
+
 	if err != nil {
 		logrus.Error(err)
 		return nil
@@ -37,9 +42,10 @@ func (dao *userDao) GetOne(openID string) *UserInfo {
 	return a
 }
 
-func (dao *userDao) Insert(a *UserInfo) (id int64, err error) {
+func (dao *userDao) Insert(a *TbUserInfo) (id int64, err error) {
 	rs, err := dao.runner.Insert(a)
 	if err != nil {
+		logrus.Error(err)
 		return 0, err
 	}
 	return rs.LastInsertId()
