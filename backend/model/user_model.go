@@ -90,7 +90,7 @@ func GetUserInfo(code string) *UserInfoDTO {
 	result := &UserInfoDTO{
 		OpenID: res.OpenID,
 	}
-	if one.NickName == "" {
+	if one == nil || one.NickName == "" {
 		return result
 	}
 
