@@ -81,9 +81,7 @@ func GetUserInfo(code string) *UserInfoDTO {
 	}
 	body, _ := ioutil.ReadAll(resp.Body)
 	var res OpenIDResult
-	if err := json.Unmarshal(body, &res); err != nil {
-		return nil
-	}
+	json.Unmarshal(body, &res)
 	if res.OpenID == "" {
 		return nil
 	}
@@ -92,9 +90,11 @@ func GetUserInfo(code string) *UserInfoDTO {
 	result := &UserInfoDTO{
 		OpenID: res.OpenID,
 	}
-	if one == nil {
+	if one.NickName == "" {
 		return result
 	}
+
+	result.OpenID = res.OpenID
 	result.Gender = one.Gender
 	result.Avatar = one.Url
 	result.NickName = one.NickName

@@ -45,7 +45,7 @@ func main() {
 	// groupRouter.Get("/getUserOpenId", a.GetUserOpenID)
 	groupRouter.Post("/register", a.Register)
 
-	//app.Run(iris.Addr(":8080"))
-	app.Run(iris.TLS(":443","a.crt","b.key"))
+	app.Run(iris.Addr(":8080"))
+	//app.Run(iris.TLS(":443","a.crt","b.key"))
 
 }

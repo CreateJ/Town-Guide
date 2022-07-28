@@ -65,6 +65,7 @@ func (u *UserServiceApi) Register(ctx iris.Context) {
 	ctx.ReadJSON(&userInfoDTO)
 	if userInfoDTO.NickName == "" || userInfoDTO.Avatar == "" || userInfoDTO.OpenID == "" {
 		ctx.JSON(Response{ErrorCode, "参数错误", nil})
+		return
 	}
 
 	model.Register(userInfoDTO)
