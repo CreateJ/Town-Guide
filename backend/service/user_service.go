@@ -1,13 +1,18 @@
 package service
 
-type UserService interface {
-	GetUserInfo(openId string) Response
+import (
+	"github.com/kataras/iris/v12"
+	"town-guide/model"
+)
+
+const SuccessCode = 2
+const ErrorCode = 1
+
+type UserServiceApi struct {
 }
 
-type userServiceImpl struct{}
-
-func NewUserService() UserService {
-	return userServiceImpl{}
+func NewUserService() *UserServiceApi {
+	return &UserServiceApi{}
 }
 
 type Response struct {
@@ -16,6 +21,33 @@ type Response struct {
 	Data    interface{} `json:"data"`
 }
 
-func (u userServiceImpl) GetUserInfo(openId string) Response {
-	return Response{1, "ddd", nil}
+func (u *UserServiceApi) GetUserInfo(ctx iris.Context) {
+	ctx.JSON(Response{SuccessCode, "", nil})
 }
+
+type GetOpenIDDTO struct {
+	Code string `json:"code"`
+}
+
+func (u *UserServiceApi) GetUserOpenID(ctx iris.Context) {
+	dto := GetOpenIDDTO{}
+	ctx.ReadQuery(&dto)
+	if dto.Code == "" {
+		ctx.JSON(Response{ErrorCode, "参数错误", nil})
+	}
+
+	openID := model.GetUserOpenID(dto.Code)
+	if openID == "" {
+		ctx.JSON(Response{ErrorCode, "获取不到openID", nil})
+	}
+
+	result := map[string]string{
+		"open_id": openID,
+	}
+	ctx.JSON(Response{SuccessCode, "", result})
+}
+
+//func (u *UserServiceApi) Register(ctx iris.Context) Response {
+//	oenID := model.GetUserOpenID(code)
+//	return Response{1, "ddd", oenID}
+//}

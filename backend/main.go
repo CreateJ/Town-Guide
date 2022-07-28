@@ -2,18 +2,50 @@ package main
 
 import (
 	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/mvc"
-	"town-guide/controller"
+	"github.com/kataras/iris/v12/middleware/logger"
+	irisrecover "github.com/kataras/iris/v12/middleware/recover"
+	log "github.com/sirupsen/logrus"
+
+	"time"
+	"town-guide/base"
 	"town-guide/service"
 )
 
 func main() {
-	app := iris.New()
-	mvc.Configure(app.Party("/user"), userController)
-	app.Run(iris.TLS("127.0.0.1:443","a.crt","b.key"))
-}
+	database := base.DbxDatabaseStarter{}
+	database.Setup()
 
-func userController(app *mvc.Application) {
-	app.Handle(&controller.UserController{Service:
-	service.NewUserService()})
+	app := iris.New()
+	app.Use(irisrecover.New())
+	cfg := logger.Config{
+		Status:             true,
+		IP:                 true,
+		Method:             true,
+		Path:               true,
+		Query:              true,
+		Columns:            true,
+		MessageContextKeys: []string{"logger_message"},
+		MessageHeaderKeys:  []string{"User-Agent"},
+		LogFunc: func(now time.Time, latency time.Duration,
+			status, ip, method, path string,
+			message interface{},
+			headerMessage interface{}) {
+			app.Logger().Infof("| %s | %s | %s | %s | %s | %s | %+v | %+v",
+				now.Format("2006-01-02.15:04:05.000000"),
+				latency.String(), status, ip, method, path, headerMessage, message,
+			)
+		},
+	}
+	app.Use(logger.New(cfg))
+	logger := app.Logger()
+	logger.Install(log.StandardLogger())
+	a := service.NewUserService()
+	groupRouter := app.Party("/user")
+	groupRouter.Get("/getUserInfo", a.GetUserInfo)
+	groupRouter.Get("/getUserOpenId", a.GetUserOpenID)
+	groupRouter.Get("/create", a.GetUserInfo)
+
+	//app.Run(iris.Addr(":8080"))
+	app.Run(iris.TLS("127.0.0.1:443","a.crt","b.key"))
+
 }
