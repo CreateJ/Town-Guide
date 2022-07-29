@@ -39,13 +39,26 @@ func main() {
 	app.Use(logger.New(cfg))
 	logger := app.Logger()
 	logger.Install(log.StandardLogger())
-	a := service.NewUserService()
-	groupRouter := app.Party("/user")
-	groupRouter.Get("/getUserInfo", a.GetUserInfo)
-	// groupRouter.Get("/getUserOpenId", a.GetUserOpenID)
-	groupRouter.Post("/register", a.Register)
+	userService := service.NewUserService()
+	userRouter := app.Party("/user")
+	userRouter.Get("/getUserInfo", userService.GetUserInfo)
+	userRouter.Post("/register", userService.Register)
 
-	//app.Run(iris.Addr(":8080"))
-	app.Run(iris.TLS(":443","a.crt","b.key"))
+	//scenicService := service.NewScenicService()
+	//groupRouter := app.Party("/scenic")
+	//groupRouter.Post("/addScenic", scenicService)
+	//groupRouter.Delete("/deleteScenic", scenicService.Register)
+	//groupRouter.Put("/editScenic", a.Register)
+	//groupRouter.Get("/getScenic", a.Register)
+	//groupRouter.Get("/getAllScenic", a.Register)
+
+	utilService := service.NewUtilService()
+	groupRouter := app.Party("/util")
+	groupRouter.Get("/getPic/{pic_name:string}", utilService.GetPic)
+	groupRouter.Post("/uploadFile", utilService.UploadFile)
+	groupRouter.Get("/getVideo/{video_name:string}", utilService.GetVideo)
+
+	// app.Run(iris.Addr(":8080"))
+	//app.Run(iris.TLS(":443", "a.crt", "b.key"))
 
 }
