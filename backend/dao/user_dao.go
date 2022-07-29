@@ -2,7 +2,6 @@ package dao
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"github.com/tietang/dbx"
 	"town-guide/base"
 )
@@ -33,7 +32,6 @@ func (dao *userDao) GetOne(openID string) *TbUserInfo {
 	fmt.Print(err)
 
 	if err != nil {
-		logrus.Error(err)
 		return nil
 	}
 	if !ok {
@@ -45,7 +43,6 @@ func (dao *userDao) GetOne(openID string) *TbUserInfo {
 func (dao *userDao) Insert(a *TbUserInfo) (id int64, err error) {
 	rs, err := dao.runner.Insert(a)
 	if err != nil {
-		logrus.Error(err)
 		return 0, err
 	}
 	return rs.LastInsertId()

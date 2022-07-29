@@ -1,7 +1,6 @@
 package dao
 
 import (
-	"github.com/sirupsen/logrus"
 	"github.com/tietang/dbx"
 	"town-guide/base"
 )
@@ -34,7 +33,6 @@ func (dao *ScenicDao) GetOne(id int64) *TbScenicInfo {
 	a := &TbScenicInfo{ID: id}
 	ok, err := dao.runner.GetOne(a)
 	if err != nil {
-		logrus.Error(err)
 		return nil
 	}
 	if !ok {

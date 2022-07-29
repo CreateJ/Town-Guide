@@ -1,7 +1,6 @@
 package base
 
 import (
-	log "github.com/sirupsen/logrus"
 	"github.com/tietang/props/kvs"
 	"reflect"
 )
@@ -31,10 +30,8 @@ func (b *BootApplication) Start() {
 
 //程序初始化
 func (e *BootApplication) init() {
-	log.Info("Initializing starters...")
 	for _, v := range GetStarters() {
-		typ := reflect.TypeOf(v)
-		log.Debugf("Initializing: PriorityGroup=%d,Priority=%d,type=%s", v.PriorityGroup(), v.Priority(), typ.String())
+		_ = reflect.TypeOf(v)
 		v.Init(e.starterCtx)
 	}
 }
@@ -42,10 +39,8 @@ func (e *BootApplication) init() {
 //程序安装
 func (e *BootApplication) setup() {
 
-	log.Info("Setup starters...")
 	for _, v := range GetStarters() {
-		typ := reflect.TypeOf(v)
-		log.Debug("Setup: ", typ.String())
+		_ = reflect.TypeOf(v)
 		v.Setup(e.starterCtx)
 	}
 
@@ -53,12 +48,9 @@ func (e *BootApplication) setup() {
 
 //程序开始运行，开始接受调用
 func (e *BootApplication) start() {
-
-	log.Info("Starting starters...")
 	for i, v := range GetStarters() {
 
-		typ := reflect.TypeOf(v)
-		log.Debug("Starting: ", typ.String())
+		_ = reflect.TypeOf(v)
 		if v.StartBlocking() {
 			if i+1 == len(GetStarters()) {
 				v.Start(e.starterCtx)
@@ -75,10 +67,8 @@ func (e *BootApplication) start() {
 //程序开始运行，开始接受调用
 func (e *BootApplication) Stop() {
 
-	log.Info("Stoping starters...")
 	for _, v := range GetStarters() {
-		typ := reflect.TypeOf(v)
-		log.Debug("Stoping: ", typ.String())
+		_ = reflect.TypeOf(v)
 		v.Stop(e.starterCtx)
 	}
 }
