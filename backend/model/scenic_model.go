@@ -1,5 +1,10 @@
 package model
 
+import (
+	"time"
+	"town-guide/dao"
+)
+
 //
 //import (
 //	"encoding/json"
@@ -80,14 +85,36 @@ package model
 //}
 //
 //
-//func GetUserInfo(code string) string {
-//	url := "https://api.weixin.qq.com/sns/jscode2session?appid=wx942fe69ede395b15&secret=499b3a99cec40c32a8c0f0796c2a0aa2&js_code=" + code + "&grant_type=authorization_code"
-//	resp, err := http.Get(url)
-//	if err != nil {
-//		return ""
-//	}
-//	body, _ := ioutil.ReadAll(resp.Body)
-//	var res Result
-//	json.Unmarshal(body, &res)
-//	return res.OpenID
-//}
+
+type ScenicInfoDTO struct {
+	ID           int64  `json:"id"`
+	Name         string `json:"name"`
+	LocationDesc string `json:"location_desc"`
+	Description  string `json:"description"`
+	Intro        string `json:"intro"`
+	PicUrl       string `json:"pic_url"`
+	Icon         string `json:"icon"`
+	VideoUrl     string `json:"video_url"`
+	Tag          string `json:"tag"`
+	OpenTime     string `json:"open_time"`
+	CheckNum     int64  `json:"check_num"`
+	CreateTime   int64  `json:"create_time"`
+}
+
+func AddScenic(scenicInfo *ScenicInfoDTO) {
+	info := &dao.TbScenicInfo{
+		Name:         scenicInfo.Name,
+		LocationDesc: scenicInfo.LocationDesc,
+		Description:  scenicInfo.Description,
+		Intro:        scenicInfo.Intro,
+		PicUrl:       scenicInfo.PicUrl,
+		Icon:         scenicInfo.Icon,
+		VideoUrl:     scenicInfo.VideoUrl,
+		Tag:          scenicInfo.Tag,
+		OpenTime:     scenicInfo.OpenTime,
+		CheckNum:     0,
+		CreateTime:   time.Now().Unix(),
+	}
+	scenicDao := dao.GetScenicDao()
+	_, _ = scenicDao.Insert(info)
+}

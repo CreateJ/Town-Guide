@@ -23,51 +23,32 @@ type Response struct {
 
 func (u *UserServiceApi) GetUserInfo(ctx iris.Context) {
 	dto := GetOpenIDDTO{}
-	ctx.ReadQuery(&dto)
+	_ = ctx.ReadQuery(&dto)
 	if dto.Code == "" {
-		ctx.JSON(Response{ErrorCode, "参数错误", nil})
+		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
 	}
 
 	info := model.GetUserInfo(dto.Code)
 	if info == nil {
-		ctx.JSON(Response{ErrorCode, "获取不到openID,请检查参数是否有效", nil})
+		_, _ = ctx.JSON(Response{ErrorCode, "获取不到openID,请检查参数是否有效", nil})
 		return
 	}
 
-	ctx.JSON(Response{SuccessCode, "", info})
+	_, _ = ctx.JSON(Response{SuccessCode, "", info})
 }
 
 type GetOpenIDDTO struct {
 	Code string `json:"code"`
 }
 
-//func (u *UserServiceApi) GetUserOpenID(ctx iris.Context) {
-//	dto := GetOpenIDDTO{}
-//	ctx.ReadQuery(&dto)
-//	if dto.Code == "" {
-//		ctx.JSON(Response{ErrorCode, "参数错误", nil})
-//	}
-//
-//	openID := model.GetUserOpenID(dto.Code)
-//	if openID == "" {
-//		ctx.JSON(Response{ErrorCode, "获取不到openID,请检查参数是否有效", nil})
-//		return
-//	}
-//
-//	result := map[string]string{
-//		"open_id": openID,
-//	}
-//	ctx.JSON(Response{SuccessCode, "", result})
-//}
-
 func (u *UserServiceApi) Register(ctx iris.Context) {
 	userInfoDTO := model.UserInfoDTO{}
-	ctx.ReadJSON(&userInfoDTO)
+	_ = ctx.ReadJSON(&userInfoDTO)
 	if userInfoDTO.NickName == "" || userInfoDTO.Avatar == "" || userInfoDTO.OpenID == "" {
-		ctx.JSON(Response{ErrorCode, "参数错误", nil})
+		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
 		return
 	}
 
 	model.Register(userInfoDTO)
-	ctx.JSON(Response{SuccessCode, "", nil})
+	_, _ = ctx.JSON(Response{SuccessCode, "", nil})
 }
