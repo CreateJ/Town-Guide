@@ -7,18 +7,19 @@ import (
 )
 
 type ScenicInfoDTO struct {
-	ID           int64  `json:"id"`
-	Name         string `json:"name"`
-	LocationDesc string `json:"location_desc"`
-	Description  string `json:"description"`
-	Intro        string `json:"intro"`
-	PicUrl       string `json:"pic_url"`
-	Icon         string `json:"icon"`
-	VideoUrl     string `json:"video_url"`
-	Tag          string `json:"tag"`
-	OpenTime     string `json:"open_time"`
-	CheckNum     int64  `json:"check_num"`
-	CreateTime   int64  `json:"create_time"`
+	ID           int64    `json:"id"`
+	Name         string   `json:"name"`
+	LocationDesc string   `json:"location_desc"`
+	Description  string   `json:"description"`
+	Intro        string   `json:"intro"`
+	PicUrl       string   `json:"pic_url"`
+	Icon         string   `json:"icon"`
+	VideoUrl     string   `json:"video_url"`
+	Tag          string   `json:"tag"`
+	OpenTime     string   `json:"open_time"`
+	CheckNum     int64    `json:"check_num"`
+	CreateTime   int64    `json:"create_time"`
+	Banner       []string `json:"banner"`
 }
 
 func AddScenic(scenicInfo *ScenicInfoDTO) (*ScenicInfoDTO, error) {

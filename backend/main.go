@@ -18,10 +18,12 @@ func main() {
 	userRouter := app.Party("/user")
 	userRouter.Get("/getUserInfo", userService.GetUserInfo)
 	userRouter.Post("/register", userService.Register)
-	userRouter.Post("/check/{id}", userService.Register)
-	userRouter.Get("/detail", userService.Register)
-	userRouter.Get("/checkScenicInfo", userService.Register)
-	userRouter.Get("/wantCheckScenicInfo", userService.Register)
+	userRouter.Get("/getUserDetail", userService.GetUserDetail)
+
+	userActionRouter := app.Party("/user/action")
+	userActionRouter.Post("/clock/{id}", userService.UserClockByScenicID)
+	userActionRouter.Get("/checkScenicInfo", userService.Register)
+	userActionRouter.Get("/wantCheckScenicInfo", userService.Register)
 
 	scenicService := service.NewScenicService()
 	groupRouter := app.Party("/scenic")
@@ -32,7 +34,7 @@ func main() {
 	groupRouter.Get("/getAllScenic", scenicService.GetAllScenic)
 
 	utilService := service.NewUtilService()
-	groupRouter = app.Party("/util")
+	groupRouter = app.Party("/utils")
 	groupRouter.Get("/getPic/{pic_name:string}", utilService.GetPic)
 	groupRouter.Post("/uploadFile", utilService.UploadFile)
 	groupRouter.Get("/getVideo/{video_name:string}", utilService.GetVideo)

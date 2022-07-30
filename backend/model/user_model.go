@@ -7,73 +7,34 @@ import (
 	"town-guide/dao"
 )
 
-type UserInfoDTO struct {
+type UserBaseInfoDTO struct {
 	Gender   int8   `json:"gender"`
 	NickName string `json:"nick_name"`
 	Avatar   string `json:"avatar"`
 	OpenID   string `json:"open_id"`
 }
 
-func login(openID string) *dao.TbUserInfo {
-	userDao := dao.GetUserDao()
-	userInfo := userDao.GetOne(openID)
-	if userInfo == nil {
-		return nil
-	}
-	return nil
-}
-
-//func register(openID string, userName string, url string, gender int8) error {
-//	info := &dao.UserInfo{
-//		OpenID:     openID,
-//		Url:        url,
-//		Gender:     gender,
-//		CreateTime: time.Now().Unix(),
-//		NickName:   userName,
-//	}
-//	userDao := dao.GetUserDao()
-//	insert, err := userDao.Insert(info)
-//	if err != nil {
-//
-//	}
-//	return nil
-//}
-
-//	POST
-//https: //api.weixin.qq.com/wxa/getpluginopenpid?access_token=ACCESS_TOKEN
-//	{
-//		"errcode": 0,
-//		"errmsg": "ok",
-//		"openpid": "GACo74wkDIkDzEhkwRwgjGt1pqlk",
-//	}
-//	GET
-//https: //api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET
-
-//}
-
-//type UserInfo struct {
-//	`id`          bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-//	`open_id`     varchar(225)        NULL     DEFAULT '',
-//	`nick_name`   varchar(225)        NULL     DEFAULT '',
-//	`url`         varchar(225)        NULL     DEFAULT '',
-//	`gender`      tinyint(4)          NOT NULL DEFAULT '0',
-//	`create_time` i
-//}
-
-func getUserInfoByOpenID() {
-
+type UserInfoDTO struct {
+	Gender               int8   `json:"gender"`
+	NickName             string `json:"nick_name"`
+	Avatar               string `json:"avatar"`
+	OpenID               string `json:"open_id"`
+	CollectionScenicInfo *[]ScenicInfoDTO
+	ClockScenicInfo      *[]ScenicInfoDTO
+	ClockNum             int64 `json:"clock_num"`
 }
 
 type TokenResult struct {
 	AccessToken string `json:"access_token"`
 	ExpiresIn   int    `json:"expires_in"`
 }
+
 type OpenIDResult struct {
 	ErrCode int    `json:"session_key"`
 	OpenID  string `json:"openid"`
 }
 
-func GetUserInfo(code string) *UserInfoDTO {
+func GetUserBaseInfo(code string) *UserBaseInfoDTO {
 	url := "https://api.weixin.qq.com/sns/jscode2session?appid=wx942fe69ede395b15&secret=499b3a99cec40c32a8c0f0796c2a0aa2&js_code=" + code + "&grant_type=authorization_code"
 	resp, err := http.Get(url)
 	if err != nil {
@@ -87,7 +48,7 @@ func GetUserInfo(code string) *UserInfoDTO {
 	}
 	userdao := dao.GetUserDao()
 	one := userdao.GetOne(res.OpenID)
-	result := &UserInfoDTO{
+	result := &UserBaseInfoDTO{
 		OpenID: res.OpenID,
 	}
 	if one == nil || one.NickName == "" {
@@ -101,19 +62,78 @@ func GetUserInfo(code string) *UserInfoDTO {
 	return result
 }
 
-//func GetUserInfo(code string) string {
-//	url := "https://api.weixin.qq.com/sns/jscode2session?appid=wx942fe69ede395b15&secret=499b3a99cec40c32a8c0f0796c2a0aa2&js_code=" + code + "&grant_type=authorization_code"
-//	resp, err := http.Get(url)
-//	if err != nil {
-//		return ""
-//	}
-//	body, _ := ioutil.ReadAll(resp.Body)
-//	var res Result
-//	json.Unmarshal(body, &res)
-//	return res.OpenID
-//}
+func GetUserDetail(openID string) *UserInfoDTO {
+	if openID == "" {
+		return nil
+	}
+	userDao := dao.GetUserDao()
+	userBaseInfo := userDao.GetOne(openID)
+	result := &UserInfoDTO{
+		OpenID:   userBaseInfo.OpenID,
+		NickName: userBaseInfo.NickName,
+		Avatar:   userBaseInfo.Url,
+		Gender:   userBaseInfo.Gender,
+	}
 
-func Register(userInfo UserInfoDTO) {
+	userActionDao := dao.GetUserActionDao()
+	scenicDao := dao.GetScenicDao()
+	userClock := userActionDao.QueryUserClock(openID)
+	if userClock != nil && len(*userClock) > 0 {
+		clockList := make([]ScenicInfoDTO, 0, len(*userClock))
+
+		for _, v := range *userClock {
+			scenicInfo := scenicDao.QueryOne(v.ScenicID)
+			if scenicInfo != nil {
+				temp := ScenicInfoDTO{
+					ID:           scenicInfo.ID,
+					Name:         scenicInfo.Name,
+					LocationDesc: scenicInfo.LocationDesc,
+					Description:  scenicInfo.Description,
+					Intro:        scenicInfo.Intro,
+					PicUrl:       scenicInfo.PicUrl,
+					Icon:         scenicInfo.Icon,
+					VideoUrl:     scenicInfo.VideoUrl,
+					Tag:          scenicInfo.Tag,
+					OpenTime:     scenicInfo.OpenTime,
+					CheckNum:     scenicInfo.CheckNum,
+					CreateTime:   scenicInfo.CreateTime,
+				}
+				clockList = append(clockList, temp)
+			}
+			result.ClockScenicInfo = &clockList
+			result.ClockNum = int64(len(clockList))
+		}
+	}
+	userCollection := userActionDao.QueryUserCollection(openID)
+	if userCollection != nil && len(*userCollection) > 0 {
+		collectionList := make([]ScenicInfoDTO, 0, len(*userCollection))
+		for _, v := range *userCollection {
+			scenicInfo := scenicDao.QueryOne(v.ScenicID)
+			if scenicInfo != nil {
+				temp := ScenicInfoDTO{
+					ID:           scenicInfo.ID,
+					Name:         scenicInfo.Name,
+					LocationDesc: scenicInfo.LocationDesc,
+					Description:  scenicInfo.Description,
+					Intro:        scenicInfo.Intro,
+					PicUrl:       scenicInfo.PicUrl,
+					Icon:         scenicInfo.Icon,
+					VideoUrl:     scenicInfo.VideoUrl,
+					Tag:          scenicInfo.Tag,
+					OpenTime:     scenicInfo.OpenTime,
+					CheckNum:     scenicInfo.CheckNum,
+					CreateTime:   scenicInfo.CreateTime,
+				}
+				collectionList = append(collectionList, temp)
+			}
+			result.ClockScenicInfo = &collectionList
+		}
+
+	}
+	return result
+}
+
+func Register(userInfo UserBaseInfoDTO) {
 	userDao := dao.GetUserDao()
 	info := userDao.GetOne(userInfo.OpenID)
 	if info != nil {

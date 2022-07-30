@@ -13,15 +13,15 @@ func NewScenicService() *ScenicServiceApi {
 }
 
 func (u *ScenicServiceApi) GetScenic(ctx iris.Context) {
-	dto := GetOpenIDDTO{}
-	ctx.ReadQuery(&dto)
-	if dto.Code == "" {
+	scenicID, err := ctx.Params().GetInt64("scenic_id")
+	if err != nil || scenicID <= 0 {
 		ctx.JSON(Response{ErrorCode, "参数错误", nil})
+		return
 	}
 
-	info := model.GetUserInfo(dto.Code)
+	info := model.QueryScenicByID(scenicID)
 	if info == nil {
-		ctx.JSON(Response{ErrorCode, "获取不到openID,请检查参数是否有效", nil})
+		ctx.JSON(Response{ErrorCode, "获取景区信息失败", nil})
 		return
 	}
 
@@ -31,7 +31,6 @@ func (u *ScenicServiceApi) GetScenic(ctx iris.Context) {
 func (u *ScenicServiceApi) AddScenic(ctx iris.Context) {
 	dto := model.ScenicInfoDTO{}
 	ctx.ReadQuery(&dto)
-
 	info, err := model.AddScenic(&dto)
 	if err != nil {
 		ctx.JSON(Response{ErrorCode, err.Error(), nil})

@@ -28,7 +28,7 @@ func (u *UserServiceApi) GetUserInfo(ctx iris.Context) {
 		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
 	}
 
-	info := model.GetUserInfo(dto.Code)
+	info := model.GetUserBaseInfo(dto.Code)
 	if info == nil {
 		_, _ = ctx.JSON(Response{ErrorCode, "获取不到openID,请检查参数是否有效", nil})
 		return
@@ -42,7 +42,7 @@ type GetOpenIDDTO struct {
 }
 
 func (u *UserServiceApi) Register(ctx iris.Context) {
-	userInfoDTO := model.UserInfoDTO{}
+	userInfoDTO := model.UserBaseInfoDTO{}
 	_ = ctx.ReadJSON(&userInfoDTO)
 	if userInfoDTO.NickName == "" || userInfoDTO.Avatar == "" || userInfoDTO.OpenID == "" {
 		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
@@ -50,5 +50,50 @@ func (u *UserServiceApi) Register(ctx iris.Context) {
 	}
 
 	model.Register(userInfoDTO)
+	_, _ = ctx.JSON(Response{SuccessCode, "", nil})
+}
+
+func (u *UserServiceApi) GetUserDetail(ctx iris.Context) {
+	openId := ctx.Params().Get("open_id")
+	if openId == "" {
+		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
+	}
+
+	info := model.GetUserDetail(openId)
+	if info == nil {
+		_, _ = ctx.JSON(Response{ErrorCode, "获取不到该用户信息", nil})
+		return
+	}
+
+	_, _ = ctx.JSON(Response{SuccessCode, "", info})
+}
+
+func (u *UserServiceApi) UserClockByScenicID(ctx iris.Context) {
+	openId := ctx.Params().Get("open_id")
+	scenicID, err := ctx.Params().GetInt64("scenic_id")
+
+	if err != nil || openId == "" || scenicID <= 0 {
+		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
+		return
+	}
+
+	userBaseInfo := model.GetUserBaseInfo(openId)
+	if userBaseInfo == nil {
+		_, _ = ctx.JSON(Response{ErrorCode, "获取不到该用户信息", nil})
+		return
+	}
+	scenicInfo := model.QueryScenicByID(scenicID)
+	if scenicInfo == nil {
+		_, _ = ctx.JSON(Response{ErrorCode, "获取不到该景区信息", nil})
+		return
+	}
+
+	state := model.GetUserClockState(openId, scenicID)
+	if state {
+		_, _ = ctx.JSON(Response{ErrorCode, "已打卡", nil})
+		return
+	}
+
+	_ = model.UserClock(openId, scenicID)
 	_, _ = ctx.JSON(Response{SuccessCode, "", nil})
 }
