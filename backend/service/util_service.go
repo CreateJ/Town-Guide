@@ -32,8 +32,7 @@ func (u *UtilServiceApi) UploadFile(ctx iris.Context) {
 	}
 
 	defer file.Close()
-
-	filename := info.Filename
+	filename := fmt.Sprintf("%d", time.Now().Unix()) + info.Filename
 	out, err := os.OpenFile("./../file/"+fileType+"/"+filename, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		_, _ = ctx.JSON(Response{ErrorCode, "目录不存在,请检查", nil})

@@ -7,19 +7,20 @@ import (
 )
 
 type ScenicInfoDTO struct {
-	ID           int64    `json:"id"`
-	Name         string   `json:"name"`
-	LocationDesc string   `json:"location_desc"`
-	Description  string   `json:"description"`
-	Intro        string   `json:"intro"`
-	PicUrl       string   `json:"pic_url"`
-	Icon         string   `json:"icon"`
-	VideoUrl     string   `json:"video_url"`
-	Tag          string   `json:"tag"`
-	OpenTime     string   `json:"open_time"`
-	CheckNum     int64    `json:"check_num"`
-	CreateTime   int64    `json:"create_time"`
-	Banner       []string `json:"banner"`
+	ID           int64  `json:"id"`
+	Name         string `json:"name"`
+	LocationDesc string `json:"location_desc"`
+	Description  string `json:"description"`
+	Intro        string `json:"intro"`
+	PicName      string `json:"pic_name"`
+	Icon         string `json:"icon"`
+	VideoName    string `json:"video_name"`
+	Tag          string `json:"tag"`
+	OpenTime     string `json:"open_time"`
+	CheckNum     int64  `json:"check_num"`
+	CreateTime   int64  `json:"create_time"`
+	CategoryID int64 `json:"category_id"`
+	Banner       string `json:"banner"` // 用｜分割
 }
 
 func AddScenic(scenicInfo *ScenicInfoDTO) (*ScenicInfoDTO, error) {
@@ -28,9 +29,9 @@ func AddScenic(scenicInfo *ScenicInfoDTO) (*ScenicInfoDTO, error) {
 		LocationDesc: scenicInfo.LocationDesc,
 		Description:  scenicInfo.Description,
 		Intro:        scenicInfo.Intro,
-		PicUrl:       scenicInfo.PicUrl,
+		PicUrl:       scenicInfo.PicName,
 		Icon:         scenicInfo.Icon,
-		VideoUrl:     scenicInfo.VideoUrl,
+		VideoUrl:     scenicInfo.VideoName,
 		Tag:          scenicInfo.Tag,
 		OpenTime:     scenicInfo.OpenTime,
 		CheckNum:     0,
@@ -58,9 +59,9 @@ func QueryAllScenic() *[]ScenicInfoDTO {
 			LocationDesc: v.LocationDesc,
 			Description:  v.Description,
 			Intro:        v.Intro,
-			PicUrl:       v.PicUrl,
+			PicName:       v.PicUrl,
 			Icon:         v.Icon,
-			VideoUrl:     v.VideoUrl,
+			VideoName:     v.VideoUrl,
 			Tag:          v.Tag,
 			OpenTime:     v.OpenTime,
 			CheckNum:     v.CheckNum,
@@ -86,9 +87,9 @@ func QueryScenicByID(id int64) *ScenicInfoDTO {
 		LocationDesc: scenicInfo.LocationDesc,
 		Description:  scenicInfo.Description,
 		Intro:        scenicInfo.Intro,
-		PicUrl:       scenicInfo.PicUrl,
+		PicName:       scenicInfo.PicUrl,
 		Icon:         scenicInfo.Icon,
-		VideoUrl:     scenicInfo.VideoUrl,
+		VideoName:     scenicInfo.VideoUrl,
 		Tag:          scenicInfo.Tag,
 		OpenTime:     scenicInfo.OpenTime,
 		CheckNum:     scenicInfo.CheckNum,
@@ -115,9 +116,9 @@ func EditScenic(scenicInfo *ScenicInfoDTO) error {
 		LocationDesc: scenicInfo.LocationDesc,
 		Description:  scenicInfo.Description,
 		Intro:        scenicInfo.Intro,
-		PicUrl:       scenicInfo.PicUrl,
+		PicUrl:       scenicInfo.PicName,
 		Icon:         scenicInfo.Icon,
-		VideoUrl:     scenicInfo.VideoUrl,
+		VideoUrl:     scenicInfo.VideoName,
 		Tag:          scenicInfo.Tag,
 		OpenTime:     scenicInfo.OpenTime,
 	}

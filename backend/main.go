@@ -40,5 +40,5 @@ func main() {
 	groupRouter.Get("/getVideo/{video_name:string}", utilService.GetVideo)
 
 	//app.Run(iris.Addr(":8080"))
-	app.Run(iris.TLS(":443", "a.crt", "b.key"))
+	 app.Run(iris.TLS(":443", "a.crt", "b.key"))
 }
