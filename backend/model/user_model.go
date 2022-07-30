@@ -90,13 +90,12 @@ func GetUserDetail(openID string) *UserInfoDTO {
 					LocationDesc: scenicInfo.LocationDesc,
 					Description:  scenicInfo.Description,
 					Intro:        scenicInfo.Intro,
-					PicName:       scenicInfo.PicUrl,
+					PicName:       scenicInfo.PicName,
 					Icon:         scenicInfo.Icon,
-					VideoName:     scenicInfo.VideoUrl,
+					VideoName:     scenicInfo.VideoName,
 					Tag:          scenicInfo.Tag,
 					OpenTime:     scenicInfo.OpenTime,
 					CheckNum:     scenicInfo.CheckNum,
-					CreateTime:   scenicInfo.CreateTime,
 				}
 				clockList = append(clockList, temp)
 			}
@@ -116,13 +115,12 @@ func GetUserDetail(openID string) *UserInfoDTO {
 					LocationDesc: scenicInfo.LocationDesc,
 					Description:  scenicInfo.Description,
 					Intro:        scenicInfo.Intro,
-					PicName:       scenicInfo.PicUrl,
+					PicName:       scenicInfo.PicName,
 					Icon:         scenicInfo.Icon,
-					VideoName:     scenicInfo.VideoUrl,
+					VideoName:     scenicInfo.VideoName,
 					Tag:          scenicInfo.Tag,
 					OpenTime:     scenicInfo.OpenTime,
 					CheckNum:     scenicInfo.CheckNum,
-					CreateTime:   scenicInfo.CreateTime,
 				}
 				collectionList = append(collectionList, temp)
 			}

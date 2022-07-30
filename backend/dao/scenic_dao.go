@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/tietang/dbx"
+	"time"
 	"town-guide/base"
 )
 
@@ -13,14 +14,18 @@ type TbScenicInfo struct {
 	LocationDesc string `db:"location_desc"`
 	Description  string `db:"description"`
 	Intro        string `db:"intro"`
-	PicUrl       string `db:"pic_url"`
+	PicName      string `db:"pic_name"`
 	Icon         string `db:"icon"`
-	VideoUrl     string `db:"video_url"`
+	VideoName    string `db:"video_name"`
 	Tag          string `db:"tag"`
 	OpenTime     string `db:"open_time"`
 	CheckNum     int64  `db:"check_num"`
+	Banner       string `db:"banner"`
 	CreateTime   int64  `db:"create_time"`
+	UpdateTime   int64  `db:"update_time"`
+	CategoryID   int64  `db:"category_id"`
 }
+
 type ScenicDao struct {
 	runner *dbx.Database
 }
@@ -32,9 +37,8 @@ func GetScenicDao() ScenicDao {
 }
 
 func (dao *ScenicDao) QueryAll() *[]TbScenicInfo {
-	query := &TbScenicInfo{}
 	var dst []TbScenicInfo
-	err := dao.runner.FindExample(query, &dst)
+	err := dao.runner.Find(&dst, "SELECT * FROM tb_scenic_info ")
 	if err != nil {
 		return nil
 	}
@@ -44,10 +48,7 @@ func (dao *ScenicDao) QueryAll() *[]TbScenicInfo {
 func (dao *ScenicDao) QueryOne(id int64) *TbScenicInfo {
 	a := &TbScenicInfo{ID: id}
 	ok, err := dao.runner.GetOne(a)
-	if err != nil {
-		return nil
-	}
-	if !ok {
+	if err != nil || !ok {
 		return nil
 	}
 	return a
@@ -75,46 +76,64 @@ func (dao *ScenicDao) Edit(a *TbScenicInfo) (id int64, err error) {
 	if a.ID <= 0 {
 		return 0, errors.New("id err")
 	}
-	sql := " update tb_scenic_info set"
+	sql := " update tb_scenic_info set update_time=" + fmt.Sprintf("%d", time.Now().Unix())
+	var params []interface{}
 	if a.Name != "" {
-		sql += " name=" + a.Name
+		sql += " , name=?"
+		params = append(params, a.Name)
 	}
 
 	if a.LocationDesc != "" {
-		sql += " location_desc=" + a.LocationDesc
+		sql += " , location_desc=?"
+		params = append(params, a.LocationDesc)
 	}
 
 	if a.Intro != "" {
-		sql += " intro=" + a.Intro
+		sql += " , intro=?"
+		params = append(params, a.Intro)
 	}
 
 	if a.Description != "" {
-		sql += " description=" + a.Description
+		sql += " , description=?"
+		params = append(params, a.Description)
 	}
 
-	if a.PicUrl != "" {
-		sql += " pic_url=" + a.PicUrl
+	if a.PicName != "" {
+		sql += " , pic_name=?"
+		params = append(params, a.PicName)
 	}
 
 	if a.Icon != "" {
-		sql += " icon=" + a.Icon
-	}
-	if a.VideoUrl != "" {
-		sql += " video_url=" + a.VideoUrl
-	}
-	if a.Tag != "" {
-		sql += " tag=" + a.Tag
-	}
-	if a.OpenTime != "" {
-		sql += " open_time=" + a.OpenTime
+		sql += " , icon=?"
+		params = append(params, a.Icon)
 	}
 
-	if a.VideoUrl != "" {
-		sql += " video_url=" + a.VideoUrl
+	if a.VideoName != "" {
+		sql += " , video_name=?"
+		params = append(params, a.VideoName)
+	}
+
+	if a.Tag != "" {
+		sql += " , tag=?"
+		params = append(params, a.Tag)
+	}
+
+	if a.OpenTime != "" {
+		sql += " , open_time=?"
+		params = append(params, a.OpenTime)
+	}
+
+	if a.Banner != "" {
+		sql += " , banner=?"
+		params = append(params, a.Banner)
+	}
+
+	if a.CategoryID <= 0 {
+		sql += " , category_id=" + fmt.Sprintf("%d", a.CategoryID)
 	}
 
 	sql += " where id=" + fmt.Sprintf("%d", a.ID)
-	rs, err := dao.runner.Exec(sql)
+	rs, err := dao.runner.Exec(sql, params...)
 	if err != nil {
 		return 0, err
 	}

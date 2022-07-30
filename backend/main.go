@@ -28,10 +28,10 @@ func main() {
 	scenicService := service.NewScenicService()
 	groupRouter := app.Party("/scenic")
 	groupRouter.Post("/addScenic", scenicService.AddScenic)
-	groupRouter.Delete("/deleteScenic/{id:int64}", scenicService.DeleteScenic)
-	groupRouter.Post("/editScenic", scenicService.EditScenic)
-	groupRouter.Get("/getScenic/{id:int64}", scenicService.GetScenic)
+	groupRouter.Get("/getScenic/{scenic_id:int64}", scenicService.GetScenic)
+	groupRouter.Delete("/deleteScenic/{scenic_id:int64}", scenicService.DeleteScenic)
 	groupRouter.Get("/getAllScenic", scenicService.GetAllScenic)
+	groupRouter.Post("/editScenic", scenicService.EditScenic)
 
 	utilService := service.NewUtilService()
 	groupRouter = app.Party("/utils")
@@ -39,6 +39,6 @@ func main() {
 	groupRouter.Post("/uploadFile", utilService.UploadFile)
 	groupRouter.Get("/getVideo/{video_name:string}", utilService.GetVideo)
 
-	//app.Run(iris.Addr(":8080"))
-	 app.Run(iris.TLS(":443", "a.crt", "b.key"))
+	app.Run(iris.Addr(":8080"))
+	// app.Run(iris.TLS(":443", "a.crt", "b.key"))
 }

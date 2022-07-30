@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"github.com/kataras/iris/v12"
 	"town-guide/model"
 )
@@ -30,7 +31,12 @@ func (u *ScenicServiceApi) GetScenic(ctx iris.Context) {
 
 func (u *ScenicServiceApi) AddScenic(ctx iris.Context) {
 	dto := model.ScenicInfoDTO{}
-	ctx.ReadQuery(&dto)
+	err := ctx.ReadJSON(&dto)
+	if err != nil {
+		ctx.JSON(Response{ErrorCode, err.Error(), nil})
+		return
+	}
+
 	info, err := model.AddScenic(&dto)
 	if err != nil {
 		ctx.JSON(Response{ErrorCode, err.Error(), nil})
@@ -41,7 +47,7 @@ func (u *ScenicServiceApi) AddScenic(ctx iris.Context) {
 }
 
 func (u *ScenicServiceApi) DeleteScenic(ctx iris.Context) {
-	id, err := ctx.Params().GetInt64("id")
+	id, err := ctx.Params().GetInt64("scenic_id")
 	if err != nil {
 		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
 		return
@@ -49,21 +55,20 @@ func (u *ScenicServiceApi) DeleteScenic(ctx iris.Context) {
 
 	err = model.DeleteScenicByID(id)
 	if err != nil {
-		ctx.JSON(Response{ErrorCode, err.Error(), nil})
+		_, _ = ctx.JSON(Response{ErrorCode, err.Error(), nil})
 		return
 	}
-
-	ctx.JSON(Response{SuccessCode, "", nil})
+	_, _ = ctx.JSON(Response{SuccessCode, "", nil})
 }
 
 func (u *ScenicServiceApi) EditScenic(ctx iris.Context) {
 	dto := model.ScenicInfoDTO{}
 	ctx.ReadJSON(&dto)
 	if dto.ID <= 0 {
-		ctx.JSON(Response{ErrorCode, "参数错误", nil})
+		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
 		return
 	}
-
+fmt.Println(dto)
 	err := model.EditScenic(&dto)
 	if err != nil {
 		ctx.JSON(Response{ErrorCode, "修改失败", nil})
