@@ -27,11 +27,17 @@ func main() {
 
 	scenicService := service.NewScenicService()
 	groupRouter := app.Party("/scenic")
-	groupRouter.Post("/addScenic", scenicService.AddScenic)
-	groupRouter.Get("/getScenic/{scenic_id:int64}", scenicService.GetScenic)
-	groupRouter.Delete("/deleteScenic/{scenic_id:int64}", scenicService.DeleteScenic)
-	groupRouter.Get("/getAllScenic", scenicService.GetAllScenic)
-	groupRouter.Post("/editScenic", scenicService.EditScenic)
+	groupRouter.Post("/add", scenicService.AddScenic)
+	groupRouter.Get("/get/{scenic_id:int64}", scenicService.GetScenic)
+	groupRouter.Delete("/delete/{scenic_id:int64}", scenicService.DeleteScenic)
+	groupRouter.Get("/getAll", scenicService.GetAllScenic)
+	groupRouter.Post("/edit", scenicService.EditScenic)
+
+	categoryService := service.NewCategoryService()
+	categoryRouter := app.Party("/category")
+	categoryRouter.Post("/add", categoryService.AddCategory)
+	categoryRouter.Delete("/delete/{category_id:int64}", categoryService.DeleteCategory)
+	categoryRouter.Get("/getAll", categoryService.GetAllCategory)
 
 	utilService := service.NewUtilService()
 	groupRouter = app.Party("/utils")
