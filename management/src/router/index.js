@@ -89,7 +89,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/testPage/index'),
+        component: () => import('@/views/testPage/picTest'),
         name: 'TestPage',
         meta: { title: 'TestPage', icon: 'documentation', affix: false }
       }
@@ -112,6 +112,18 @@ export const constantRoutes = [
         component: () => import('@/views/informationManagement/scenic/add'),
         name: 'scenicAdd',
         meta: { title: '景区添加', icon: 'documentation', affix: false }
+      },
+      {
+        path: 'scenic-modify',
+        component: () => import('@/views/informationManagement/scenic/add'),
+        name: 'scenicModify',
+        meta: { title: '景区修改', icon: 'documentation', affix: false }
+      },
+      {
+        path: 'category',
+        component: () => import('@/views/informationManagement/category/index'),
+        name: 'scenicList',
+        meta: { title: '分类管理', icon: 'documentation', affix: false }
       }
     ]
   },

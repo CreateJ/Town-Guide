@@ -2,7 +2,7 @@
   <div class="page-container">
     <div class="search-box"></div>
     <div class="action-box">
-      <el-button type="primary" @click="handleAdd">添加景区</el-button>
+      <el-button type="primary" @click="handleAdd">添加分类</el-button>
     </div>
     <div class="table-box">
       <el-table :data="tableData" class="table">
@@ -23,7 +23,18 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="pagination-box">123</div>
+    <div class="pagination-box"></div>
+    <el-dialog :title="categoryForm.id ? '修改' : '新增'" :visible.sync="dialogVisible" @closed="dialogClose">
+      <el-form :model="categoryForm" label-width="120">
+        <el-form-item prop="name" label="分类名称">
+          <el-input v-model="categoryForm.name"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">保存</el-button>
+          <el-button @click="dialogVisible = false">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -31,16 +42,19 @@
 import api from '@/api'
 
 export default {
-  name: 'InformationManagement',
+  name: 'CategoryManagement',
   data() {
     return {
       tableData: [],
       tableColumn: [
-        { label: '景点名称', key: 'name' },
-        { label: '地点描述', key: 'description' },
-        { label: '标签', key: 'tag' },
-        { label: '简介', key: 'intro' }
-      ]
+        { label: '分类名称', key: 'name' }
+      ],
+      dialogVisible: false,
+      categoryForm: {
+        id: null,
+        name: ''
+      },
+      currentRow: null
     }
   },
   mounted() {
@@ -48,30 +62,41 @@ export default {
   },
   methods: {
     getTableData() {
-      api.scenic.getScenicList().then(res => {
-        console.log(res)
+      api.category.getCategoryList().then(res => {
         this.tableData = res.data
       })
     },
     handleAdd() {
-      this.$router.push('/information-management/scenic-add')
+      console.log('add')
+      this.dialogVisible = true
     },
     handleModify(row) {
-      this.$router.push({
-        name: 'scenicModify',
-        query: row
+      this.dialogVisible = true
+      this.currentRow = row
+      this.categoryForm = this.currentRow
+    },
+    dialogClose() {
+      this.categoryForm = this.$options.data().categoryForm
+    },
+    onSubmit() {
+      console.log(this.categoryForm.id)
+      api.category.addCategory(this.categoryForm).then(res => {
+        console.log(res)
+      }).finally(_ => {
+        this.getTableData()
+        this.dialogVisible = false
       })
     },
     handleDelete(row) {
-      this.$confirm('确认删除该景点?', {
+      console.log(this.currentRow)
+      this.$confirm('确认删除该分类?', {
         title: '删除',
         type: 'info',
         confirmButtonText: '删除',
         cancelButtonText: '取消'
       }).then(_ => {
-        api.scenic.deleteScenic({ id: row.id }).then(res => {
+        api.category.deleteCategory({ id: row.id }).then(res => {
           console.log(res)
-          this.$message.success('删除成功！')
         }).finally(_ => {
           this.getTableData()
         })
@@ -90,15 +115,9 @@ export default {
   display: flex;
   flex-flow: column nowrap;
   padding: 0 15px;
-  overflow: auto;
 
   .search-box {
     background: lightblue;
-  }
-
-  .action-box {
-    padding: 10px 0;
-    border-bottom: 1px solid #cccccc
   }
 
   .table-box {
