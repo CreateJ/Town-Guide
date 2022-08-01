@@ -66,6 +66,7 @@ func QueryAllScenic() *[]ScenicInfoDTO {
 		categoryID := scenicInfo.CategoryID
 		category, ok := categoryMap[categoryID]
 		if !ok {
+			categoryID = 0
 			category = "其他"
 		}
 		temp := ScenicInfoDTO{
