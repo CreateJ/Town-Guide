@@ -76,28 +76,14 @@ func GetUserDetail(openID string) *UserInfoDTO {
 	}
 
 	userActionDao := dao.GetUserActionDao()
-	scenicDao := dao.GetScenicDao()
 	userClock := userActionDao.QueryUserClock(openID)
 	if userClock != nil && len(*userClock) > 0 {
 		clockList := make([]ScenicInfoDTO, 0, len(*userClock))
 
 		for _, v := range *userClock {
-			scenicInfo := scenicDao.QueryOne(v.ScenicID)
+			scenicInfo :=QueryScenicByID(v.ScenicID)
 			if scenicInfo != nil {
-				temp := ScenicInfoDTO{
-					ID:           scenicInfo.ID,
-					Name:         scenicInfo.Name,
-					LocationDesc: scenicInfo.LocationDesc,
-					Description:  scenicInfo.Description,
-					Intro:        scenicInfo.Intro,
-					PicName:       scenicInfo.PicName,
-					Icon:         scenicInfo.Icon,
-					VideoName:     scenicInfo.VideoName,
-					Tag:          scenicInfo.Tag,
-					OpenTime:     scenicInfo.OpenTime,
-					ClockNum:     scenicInfo.ClockNum,
-				}
-				clockList = append(clockList, temp)
+				clockList = append(clockList, *scenicInfo)
 			}
 			result.ClockScenicInfo = &clockList
 			result.ClockNum = int64(len(clockList))
@@ -107,24 +93,11 @@ func GetUserDetail(openID string) *UserInfoDTO {
 	if userCollection != nil && len(*userCollection) > 0 {
 		collectionList := make([]ScenicInfoDTO, 0, len(*userCollection))
 		for _, v := range *userCollection {
-			scenicInfo := scenicDao.QueryOne(v.ScenicID)
+			scenicInfo := QueryScenicByID(v.ScenicID)
 			if scenicInfo != nil {
-				temp := ScenicInfoDTO{
-					ID:           scenicInfo.ID,
-					Name:         scenicInfo.Name,
-					LocationDesc: scenicInfo.LocationDesc,
-					Description:  scenicInfo.Description,
-					Intro:        scenicInfo.Intro,
-					PicName:       scenicInfo.PicName,
-					Icon:         scenicInfo.Icon,
-					VideoName:     scenicInfo.VideoName,
-					Tag:          scenicInfo.Tag,
-					OpenTime:     scenicInfo.OpenTime,
-					ClockNum:     scenicInfo.ClockNum,
-				}
-				collectionList = append(collectionList, temp)
+				collectionList = append(collectionList, *scenicInfo)
 			}
-			result.ClockScenicInfo = &collectionList
+			result.CollectionScenicInfo = &collectionList
 		}
 
 	}

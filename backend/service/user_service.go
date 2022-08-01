@@ -57,6 +57,7 @@ func (u *UserServiceApi) GetUserDetail(ctx iris.Context) {
 	openId := ctx.Params().Get("open_id")
 	if openId == "" {
 		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
+		return
 	}
 
 	info := model.GetUserDetail(openId)

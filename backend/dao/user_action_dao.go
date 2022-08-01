@@ -8,8 +8,8 @@ import (
 
 type TbUserScenicCollection struct {
 	ID         int64  `db:"id,omitempty"`
-	OpenID     string `db:"open_id"`
-	ScenicID   int64  `db:"scenic_id"`
+	OpenID     string `db:"open_id,unique"`
+	ScenicID   int64  `db:"scenic_id,unique"`
 	UpdateTime int64  `db:"update_time"`
 	CreateTime int64  `db:"create_time"`
 }
@@ -105,7 +105,7 @@ func (dao *UserActionDao) QueryUserScenicClock(openID string, scenicID int64) *T
 }
 
 func (dao *UserActionDao) DeleteUserCollection(openID string, scenicID int64) error {
-	sql := "DELETE FROM tb_user_scenic_collection WHERE open_id=" + openID + " and scenic_id = " + fmt.Sprintf("%d", scenicID)
+	sql := "DELETE FROM tb_user_scenic_collection WHERE open_id='" + openID + "' and scenic_id = " + fmt.Sprintf("%d", scenicID)
 	_, err := dao.runner.Exec(sql)
 	if err != nil {
 		return err

@@ -18,12 +18,11 @@ func main() {
 	userRouter := app.Party("/user")
 	userRouter.Get("/getUserInfo", userService.GetUserInfo)
 	userRouter.Post("/register", userService.Register)
-	userRouter.Get("/getUserDetail", userService.GetUserDetail)
+	userRouter.Get("/getUserDetail/{open_id:string}", userService.GetUserDetail)
 
 	userActionRouter := app.Party("/user/action")
 	userActionRouter.Post("/clock", userService.UserClockByScenicID)
 	userActionRouter.Post("/collection", userService.UserCollectionByScenicID)
-	userActionRouter.Post("/wantCheckScenicInfo", userService.Register)
 
 	scenicService := service.NewScenicService()
 	groupRouter := app.Party("/scenic")
@@ -47,6 +46,6 @@ func main() {
 	groupRouter.Post("/uploadFile", utilService.UploadFile)
 	groupRouter.Get("/getMedia/{media_name:string}", utilService.GetMedia)
 
-	// app.Run(iris.Addr(":8080"))
-	app.Run(iris.TLS(":443", "a.crt", "b.key"))
+	app.Run(iris.Addr(":8080"))
+	//app.Run(iris.TLS(":443", "a.crt", "b.key"))
 }
