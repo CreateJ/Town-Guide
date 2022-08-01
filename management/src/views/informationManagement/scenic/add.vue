@@ -1,12 +1,12 @@
 <template>
   <div class="scenic-add-container">
-    <h3 class="form-name">添加景区</h3>
+    <h3 class="form-name">景区信息</h3>
     <el-form ref="from" :model="form" label-width="120px">
       <el-form-item label="景区名称">
         <el-input v-model="form.name"/>
       </el-form-item>
       <el-form-item label="地点">
-        <el-input v-model="form.local_desc"/>
+        <el-input v-model="form.location_desc"/>
       </el-form-item>
       <el-form-item label="描述">
         <el-input v-model="form.description"/>
@@ -30,43 +30,83 @@
         <el-input v-model="form.open_time"/>
       </el-form-item>
       <el-form-item label="轮播图">
-        <el-input v-model="form.banner"/>
+        <!--        <el-input v-model="form.banner"/>-->
+        <media-upload :file-list="bannerList" :limit="5" @file-list-change="bannerListChange"/>
       </el-form-item>
       <el-form-item label="分类id">
-        <el-input v-model="form.category_id"/>
+        <el-select v-model="form.category_id">
+          <el-option
+            v-for="item in categoryOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
-        <el-button>取消</el-button>
+        <el-button type="primary" @click="onSubmit">保存</el-button>
+        <el-button @click="$router.go(-1)">取消</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
+import MediaUpload from '@/components/MediaUpload'
+import api from '@/api'
+
 export default {
   name: 'ScenicAdd',
-  data() {
+  components: { MediaUpload },
+  data () {
     return {
       form: {
-        name: '景区名字',
-        local_desc: '地点地点',
-        description: '地点描述唱的描述',
-        intro: '段简介',
-        pic_name: '图片名称',
-        icon: 'icon图片名称',
-        video_name: '视频名称',
-        tag: 'tag标签',
-        open_time: '开放时间',
-        check_num: 0,
-        category_id: 1,
-        banner: 'banner图片名称,多个通过|分割'
-      }
+        name: '',
+        location_desc: '',
+        description: '',
+        intro: '',
+        pic_name: '',
+        icon: '',
+        video_name: '',
+        tag: '',
+        open_time: '',
+        check_num: 0, // 打卡数量
+        category_id: 0,
+        banner: ''
+      },
+      bannerList: [],
+      categoryOptions: []
     }
   },
+  mounted () {
+    if (this.$route.query.id) {
+      this.form = this.$route.query
+      if (this.form.banner.length) {
+        this.bannerList = this.form.banner.split('|').map(item => {
+          return {
+            name: item,
+            url: `https://guide.time-traveler.cn/utils/getPic/${item}`
+          }
+        })
+      }
+    }
+    api.category.getCategoryList().then(res => {
+      console.log(res)
+      this.categoryOptions = res.data
+      this.categoryOptions.unshift({ id: 0, name: '其他' })
+    })
+  },
   methods: {
-    onSubmit() {
+    onSubmit () {
+      const submitApi = this.form.id ? api.scenic.editScenic : api.scenic.addScenic
       console.log(this.form)
+      submitApi(this.form).then(res => {
+        this.$message.success('保存成功！')
+        this.$router.go(-1)
+      })
+    },
+    bannerListChange (list) {
+      this.form.banner = list.join('|')
     }
   }
 }
@@ -75,6 +115,8 @@ export default {
 <style scoped lang="scss">
 .scenic-add-container {
   padding: 0 15px;
+  max-width: 800px;
+  margin: 0 auto;
 
   .form-name {
     text-align: center;

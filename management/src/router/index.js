@@ -89,7 +89,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/testPage/index'),
+        component: () => import('@/views/testPage/picTest'),
         name: 'TestPage',
         meta: { title: 'TestPage', icon: 'documentation', affix: false }
       }
@@ -112,6 +112,24 @@ export const constantRoutes = [
         component: () => import('@/views/informationManagement/scenic/add'),
         name: 'scenicAdd',
         meta: { title: '景区添加', icon: 'documentation', affix: false }
+      },
+      {
+        path: 'scenic-modify',
+        component: () => import('@/views/informationManagement/scenic/add'),
+        name: 'scenicModify',
+        meta: { title: '景区修改', icon: 'documentation', affix: false }
+      },
+      {
+        path: 'category',
+        component: () => import('@/views/informationManagement/category/index'),
+        name: 'scenicList',
+        meta: { title: '分类管理', icon: 'documentation', affix: false }
+      },
+      {
+        path: 'map',
+        component: () => import('@/views/informationManagement/map/index'),
+        name: 'mapImage',
+        meta: { title: '主页地图', icon: 'documentation', affix: false }
       }
     ]
   },
@@ -428,7 +446,7 @@ const createRouter = () => new Router({
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
-export function resetRouter() {
+export function resetRouter () {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
