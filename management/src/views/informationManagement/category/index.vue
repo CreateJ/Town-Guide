@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-    <div class="search-box"></div>
+    <!--    <div class="search-box"></div>-->
     <div class="action-box">
       <el-button type="primary" @click="handleAdd">添加分类</el-button>
     </div>
@@ -8,11 +8,10 @@
       <el-table :data="tableData" class="table">
         <el-table-column
           v-for="(item, index) in tableColumn"
-          :prop="item.key"
           :key="index"
+          :prop="item.key"
           :label="item.label"
-        >
-        </el-table-column>
+        />
         <el-table-column
           label="操作"
         >
@@ -23,11 +22,11 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="pagination-box"></div>
+    <!--    <div class="pagination-box"></div>-->
     <el-dialog :title="categoryForm.id ? '修改' : '新增'" :visible.sync="dialogVisible" @closed="dialogClose">
       <el-form :model="categoryForm" label-width="120">
         <el-form-item prop="name" label="分类名称">
-          <el-input v-model="categoryForm.name"></el-input>
+          <el-input v-model="categoryForm.name"/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -43,7 +42,7 @@ import api from '@/api'
 
 export default {
   name: 'CategoryManagement',
-  data() {
+  data () {
     return {
       tableData: [],
       tableColumn: [
@@ -57,28 +56,28 @@ export default {
       currentRow: null
     }
   },
-  mounted() {
+  mounted () {
     this.getTableData()
   },
   methods: {
-    getTableData() {
+    getTableData () {
       api.category.getCategoryList().then(res => {
         this.tableData = res.data
       })
     },
-    handleAdd() {
+    handleAdd () {
       console.log('add')
       this.dialogVisible = true
     },
-    handleModify(row) {
+    handleModify (row) {
       this.dialogVisible = true
       this.currentRow = row
       this.categoryForm = this.currentRow
     },
-    dialogClose() {
+    dialogClose () {
       this.categoryForm = this.$options.data().categoryForm
     },
-    onSubmit() {
+    onSubmit () {
       console.log(this.categoryForm.id)
       api.category.addCategory(this.categoryForm).then(res => {
         console.log(res)
@@ -87,7 +86,7 @@ export default {
         this.dialogVisible = false
       })
     },
-    handleDelete(row) {
+    handleDelete (row) {
       console.log(this.currentRow)
       this.$confirm('确认删除该分类?', {
         title: '删除',
@@ -118,6 +117,11 @@ export default {
 
   .search-box {
     background: lightblue;
+  }
+
+  .action-box {
+    padding: 10px 0;
+    border-bottom: 1px solid #cccccc
   }
 
   .table-box {

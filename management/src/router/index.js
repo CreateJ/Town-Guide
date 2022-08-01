@@ -124,6 +124,12 @@ export const constantRoutes = [
         component: () => import('@/views/informationManagement/category/index'),
         name: 'scenicList',
         meta: { title: '分类管理', icon: 'documentation', affix: false }
+      },
+      {
+        path: 'map',
+        component: () => import('@/views/informationManagement/map/index'),
+        name: 'mapImage',
+        meta: { title: '主页地图', icon: 'documentation', affix: false }
       }
     ]
   },
@@ -440,7 +446,7 @@ const createRouter = () => new Router({
 const router = createRouter()
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
-export function resetRouter() {
+export function resetRouter () {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
