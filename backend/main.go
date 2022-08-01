@@ -45,6 +45,6 @@ func main() {
 	groupRouter.Post("/uploadFile", utilService.UploadFile)
 	groupRouter.Get("/getMedia/{media_name:string}", utilService.GetMedia)
 
-	app.Run(iris.Addr(":8080"))
-	 //app.Run(iris.TLS(":443", "a.crt", "b.key"))
+	//app.Run(iris.Addr(":8080"))
+	 app.Run(iris.TLS(":443", "a.crt", "b.key"))
 }
