@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-    <div class="search-box"></div>
+    <div class="search-box" />
     <div class="action-box">
       <el-button type="primary" @click="handleAdd">添加景区</el-button>
     </div>
@@ -8,11 +8,10 @@
       <el-table :data="tableData" class="table">
         <el-table-column
           v-for="(item, index) in tableColumn"
-          :prop="item.key"
           :key="index"
+          :prop="item.key"
           :label="item.label"
-        >
-        </el-table-column>
+        />
         <el-table-column
           label="操作"
         >

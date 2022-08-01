@@ -31,10 +31,17 @@
       </el-form-item>
       <el-form-item label="轮播图">
         <!--        <el-input v-model="form.banner"/>-->
-        <media-upload :file-list="bannerList" @file-list-change="bannerListChange" :limit="5"></media-upload>
+        <media-upload :file-list="bannerList" :limit="5" @file-list-change="bannerListChange"/>
       </el-form-item>
       <el-form-item label="分类id">
-        <el-input v-model="form.category_id"/>
+        <el-select v-model="form.category_id">
+          <el-option
+            v-for="item in categoryOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -51,7 +58,7 @@ import api from '@/api'
 export default {
   name: 'ScenicAdd',
   components: { MediaUpload },
-  data() {
+  data () {
     return {
       form: {
         name: '',
@@ -64,13 +71,14 @@ export default {
         tag: '',
         open_time: '',
         check_num: 0, // 打卡数量
-        category_id: 1,
+        category_id: 0,
         banner: ''
       },
-      bannerList: []
+      bannerList: [],
+      categoryOptions: []
     }
   },
-  mounted() {
+  mounted () {
     if (this.$route.query.id) {
       this.form = this.$route.query
       if (this.form.banner.length) {
@@ -82,9 +90,14 @@ export default {
         })
       }
     }
+    api.category.getCategoryList().then(res => {
+      console.log(res)
+      this.categoryOptions = res.data
+      this.categoryOptions.unshift({ id: 0, name: '其他' })
+    })
   },
   methods: {
-    onSubmit() {
+    onSubmit () {
       const submitApi = this.form.id ? api.scenic.editScenic : api.scenic.addScenic
       console.log(this.form)
       submitApi(this.form).then(res => {
@@ -92,9 +105,8 @@ export default {
         this.$router.go(-1)
       })
     },
-    bannerListChange(list) {
+    bannerListChange (list) {
       this.form.banner = list.join('|')
-      console.log(this.form.banner)
     }
   }
 }
@@ -103,6 +115,8 @@ export default {
 <style scoped lang="scss">
 .scenic-add-container {
   padding: 0 15px;
+  max-width: 800px;
+  margin: 0 auto;
 
   .form-name {
     text-align: center;
