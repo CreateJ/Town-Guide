@@ -2,7 +2,6 @@ package model
 
 import (
 	"errors"
-	"fmt"
 	"time"
 	"town-guide/dao"
 )
@@ -18,8 +17,9 @@ type ScenicInfoDTO struct {
 	VideoName    string `json:"video_name"`
 	Tag          string `json:"tag"`
 	OpenTime     string `json:"open_time"`
-	CheckNum     int64  `json:"check_num"`
+	ClockNum     int64  `json:"clock_num"`
 	CategoryID   int64  `json:"category_id"`
+	Category     string `json:"category"`
 	Banner       string `json:"banner"` // 用｜分割
 }
 
@@ -55,6 +55,46 @@ func QueryAllScenic() *[]ScenicInfoDTO {
 	if scenicInfos == nil || len(*scenicInfos) <= 0 {
 		return nil
 	}
+	categoryDao := dao.GetCategoryDao()
+	allCategory := categoryDao.QueryAll()
+	categoryMap := map[int64]string{}
+	for _, v := range *allCategory {
+		categoryMap[v.ID] = v.Name
+	}
+	result := make([]ScenicInfoDTO, 0, len(*scenicInfos))
+	for _, scenicInfo := range *scenicInfos {
+		categoryID := scenicInfo.CategoryID
+		category, ok := categoryMap[categoryID]
+		if !ok {
+			category = "其他"
+		}
+		temp := ScenicInfoDTO{
+			ID:           scenicInfo.ID,
+			Name:         scenicInfo.Name,
+			LocationDesc: scenicInfo.LocationDesc,
+			Description:  scenicInfo.Description,
+			Intro:        scenicInfo.Intro,
+			PicName:      scenicInfo.PicName,
+			Icon:         scenicInfo.Icon,
+			VideoName:    scenicInfo.VideoName,
+			Tag:          scenicInfo.Tag,
+			OpenTime:     scenicInfo.OpenTime,
+			ClockNum:     scenicInfo.ClockNum,
+			CategoryID:   categoryID,
+			Banner:       scenicInfo.Banner,
+			Category:     category,
+		}
+		result = append(result, temp)
+	}
+	return &result
+}
+
+func QueryScenicByCategoryID(categoryID int64) *[]ScenicInfoDTO {
+	scenicDao := dao.GetScenicDao()
+	scenicInfos := scenicDao.QueryByCategoryID(categoryID)
+	if scenicInfos == nil || len(*scenicInfos) <= 0 {
+		return nil
+	}
 
 	result := make([]ScenicInfoDTO, 0, len(*scenicInfos))
 	for _, scenicInfo := range *scenicInfos {
@@ -69,7 +109,7 @@ func QueryAllScenic() *[]ScenicInfoDTO {
 			VideoName:    scenicInfo.VideoName,
 			Tag:          scenicInfo.Tag,
 			OpenTime:     scenicInfo.OpenTime,
-			CheckNum:     scenicInfo.CheckNum,
+			ClockNum:     scenicInfo.ClockNum,
 			CategoryID:   scenicInfo.CategoryID,
 			Banner:       scenicInfo.Banner,
 		}
@@ -89,6 +129,14 @@ func QueryScenicByID(id int64) *ScenicInfoDTO {
 		return nil
 	}
 
+	categoryDao := dao.GetCategoryDao()
+	allCategory := categoryDao.QueryOne(scenicInfo.CategoryID)
+	categoryID := int64(0)
+	category := "其他"
+	if allCategory != nil {
+		categoryID = scenicInfo.CategoryID
+		category = allCategory.Name
+	}
 	return &ScenicInfoDTO{
 		ID:           scenicInfo.ID,
 		Name:         scenicInfo.Name,
@@ -100,9 +148,10 @@ func QueryScenicByID(id int64) *ScenicInfoDTO {
 		VideoName:    scenicInfo.VideoName,
 		Tag:          scenicInfo.Tag,
 		OpenTime:     scenicInfo.OpenTime,
-		CheckNum:     scenicInfo.CheckNum,
-		CategoryID:   scenicInfo.CategoryID,
+		ClockNum:     scenicInfo.ClockNum,
+		CategoryID:   categoryID,
 		Banner:       scenicInfo.Banner,
+		Category:     category,
 	}
 }
 
@@ -136,20 +185,19 @@ func EditScenic(scenicInfo *ScenicInfoDTO) error {
 		CategoryID:   scenicInfo.CategoryID,
 	}
 	_, err := scenicDao.Edit(info)
-	fmt.Println(err)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func AddScenicCheckByID(id int64) error {
+func AddScenicClockNumByID(id int64) error {
 	if id <= 0 {
 		return errors.New("id err")
 	}
 
 	scenicDao := dao.GetScenicDao()
-	_, err := scenicDao.IncrCheckNum(id)
+	_, err := scenicDao.IncrClockNum(id)
 	if err != nil {
 		return err
 	}

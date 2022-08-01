@@ -1,24 +1,27 @@
 package dao
 
 import (
+	"fmt"
 	"github.com/tietang/dbx"
 	"town-guide/base"
 )
 
 type TbUserScenicCollection struct {
-	Id         int64  `db:"id,omitempty"`
+	ID         int64  `db:"id,omitempty"`
 	OpenID     string `db:"open_id"`
 	ScenicID   int64  `db:"scenic_id"`
-	UpdateTime int64   `db:"update_time"`
+	UpdateTime int64  `db:"update_time"`
 	CreateTime int64  `db:"create_time"`
 }
+
 type TbUserScenicClock struct {
-	Id         int64  `db:"id,omitempty"`
+	ID         int64  `db:"id,omitempty"`
 	OpenID     string `db:"open_id"`
 	ScenicID   int64  `db:"scenic_id"`
-	UpdateTime int64   `db:"update_time"`
+	UpdateTime int64  `db:"update_time"`
 	CreateTime int64  `db:"create_time"`
 }
+
 type UserActionDao struct {
 	runner *dbx.Database
 }
@@ -29,17 +32,22 @@ func GetUserActionDao() UserActionDao {
 	}
 }
 
-func (dao *UserActionDao) GetOne(openID string) *TbUserInfo {
-	a := &TbUserInfo{OpenID: openID}
+func (dao *UserActionDao) GetUserCollectionState(openID string, scenicID int64) bool {
+	a := &TbUserScenicCollection{OpenID: openID, ScenicID: scenicID}
 	ok, err := dao.runner.GetOne(a)
+	if err != nil || !ok {
+		return false
+	}
+	return a.ID > 0
+}
 
-	if err != nil {
-		return nil
+func (dao *UserActionDao) GetUserClockState(openID string, scenicID int64) bool {
+	a := &TbUserScenicClock{OpenID: openID, ScenicID: scenicID}
+	ok, err := dao.runner.GetOne(a)
+	if err != nil || !ok {
+		return false
 	}
-	if !ok {
-		return nil
-	}
-	return a
+	return a.ID > 0
 }
 
 func (dao *UserActionDao) InsertCollection(a *TbUserScenicCollection) (id int64, err error) {
@@ -94,4 +102,13 @@ func (dao *UserActionDao) QueryUserScenicClock(openID string, scenicID int64) *T
 		return nil
 	}
 	return query
+}
+
+func (dao *UserActionDao) DeleteUserCollection(openID string, scenicID int64) error {
+	sql := "DELETE FROM tb_user_scenic_collection WHERE open_id=" + openID + " and scenic_id = " + fmt.Sprintf("%d", scenicID)
+	_, err := dao.runner.Exec(sql)
+	if err != nil {
+		return err
+	}
+	return nil
 }

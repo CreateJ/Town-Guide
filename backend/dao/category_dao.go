@@ -1,14 +1,17 @@
 package dao
 
 import (
+	"errors"
 	"fmt"
 	"github.com/tietang/dbx"
+	"strings"
 	"town-guide/base"
 )
 
 type TbCategory struct {
-	ID           int64  `db:"id,omitempty"`
-	Name         string `db:"name"`
+	ID   int64  `db:"id,omitempty"`
+	Name string `db:"name"`
+	Icon string `db:"icon"`
 }
 
 type CategoryDao struct {
@@ -57,3 +60,32 @@ func (dao *CategoryDao) Insert(a *TbCategory) (id int64, err error) {
 	return rs.LastInsertId()
 }
 
+func (dao *CategoryDao) Edit(a *TbCategory) (id int64, err error) {
+	if a.ID <= 0 {
+		return 0, errors.New("id err")
+	}
+	sql := " update tb_category set "
+	var params []interface{}
+	var sqls[]string
+	if a.Name != "" {
+		sqls = append(sqls," name=?")
+		params = append(params, a.Name)
+	}
+
+	if a.Icon != "" {
+		sqls = append(sqls," icon=?")
+		params = append(params, a.Icon)
+	}
+
+	if len(sqls)==0 {
+		return 0, nil
+	}
+	strings.Join(sqls, ",")
+	sql += strings.Join(sqls, ",")+" where id=" + fmt.Sprintf("%d", a.ID)
+	rs, err := dao.runner.Exec(sql, params...)
+	fmt.Println(err)
+	if err != nil {
+		return 0, err
+	}
+	return rs.RowsAffected()
+}

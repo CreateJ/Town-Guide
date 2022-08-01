@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/tietang/dbx"
+	"strings"
 	"time"
 	"town-guide/base"
 )
@@ -19,7 +20,7 @@ type TbScenicInfo struct {
 	VideoName    string `db:"video_name"`
 	Tag          string `db:"tag"`
 	OpenTime     string `db:"open_time"`
-	CheckNum     int64  `db:"check_num"`
+	ClockNum     int64  `db:"clock_num"`
 	Banner       string `db:"banner"`
 	CreateTime   int64  `db:"create_time"`
 	UpdateTime   int64  `db:"update_time"`
@@ -39,6 +40,15 @@ func GetScenicDao() ScenicDao {
 func (dao *ScenicDao) QueryAll() *[]TbScenicInfo {
 	var dst []TbScenicInfo
 	err := dao.runner.Find(&dst, "SELECT * FROM tb_scenic_info ")
+	if err != nil {
+		return nil
+	}
+	return &dst
+}
+
+func (dao *ScenicDao) QueryByCategoryID(scenicID int64) *[]TbScenicInfo {
+	var dst []TbScenicInfo
+	err := dao.runner.Find(&dst, "SELECT * FROM tb_scenic_info WHERE Category_id="+fmt.Sprintf("%d", scenicID))
 	if err != nil {
 		return nil
 	}
@@ -140,11 +150,30 @@ func (dao *ScenicDao) Edit(a *TbScenicInfo) (id int64, err error) {
 	return rs.RowsAffected()
 }
 
-func (dao *ScenicDao) IncrCheckNum(id int64) (num int64, err error) {
+func (dao *ScenicDao) UpdateScenicCategoryID(scenicIds []int64, categoryID int64) (err error) {
+	if len(scenicIds) <= 0 {
+		return nil
+	}
+
+	sql := " update tb_scenic_info set update_time=" + fmt.Sprintf("%d", time.Now().Unix()) +
+		" , category_id=" + fmt.Sprintf("%d", categoryID)
+
+	temp := make([]string, len(scenicIds))
+	for k, v := range scenicIds {
+		temp[k] = fmt.Sprintf("%d", v)
+	}
+	result := "(" + strings.Join(temp, ",") + ")"
+
+	sql += " where id in " + result
+	_, err = dao.runner.Exec(sql)
+	return err
+}
+
+func (dao *ScenicDao) IncrClockNum(id int64) (num int64, err error) {
 	if id <= 0 {
 		return 0, errors.New("id err")
 	}
-	sql := "UPDATE tb_scenic_info SET check_num=check_num+1" +
+	sql := "UPDATE tb_scenic_info SET clock_num=clock_num+1" +
 		" where id=" + fmt.Sprintf("%d", id)
 	rs, err := dao.runner.Exec(sql)
 	if err != nil {

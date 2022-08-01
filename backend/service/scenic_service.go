@@ -68,7 +68,7 @@ func (u *ScenicServiceApi) EditScenic(ctx iris.Context) {
 		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
 		return
 	}
-fmt.Println(dto)
+	fmt.Println(dto)
 	err := model.EditScenic(&dto)
 	if err != nil {
 		ctx.JSON(Response{ErrorCode, "修改失败", nil})
@@ -80,5 +80,15 @@ fmt.Println(dto)
 
 func (u *ScenicServiceApi) GetAllScenic(ctx iris.Context) {
 	info := model.QueryAllScenic()
+	_, _ = ctx.JSON(Response{SuccessCode, "", info})
+}
+
+func (u *ScenicServiceApi) GetScenicByCategoryID(ctx iris.Context) {
+	id, err := ctx.Params().GetInt64("category_id")
+	if err != nil {
+		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
+		return
+	}
+	info := model.QueryScenicByCategoryID(id)
 	_, _ = ctx.JSON(Response{SuccessCode, "", info})
 }

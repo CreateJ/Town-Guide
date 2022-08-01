@@ -21,9 +21,9 @@ func main() {
 	userRouter.Get("/getUserDetail", userService.GetUserDetail)
 
 	userActionRouter := app.Party("/user/action")
-	userActionRouter.Post("/clock/{id}", userService.UserClockByScenicID)
-	userActionRouter.Get("/checkScenicInfo", userService.Register)
-	userActionRouter.Get("/wantCheckScenicInfo", userService.Register)
+	userActionRouter.Post("/clock", userService.UserClockByScenicID)
+	userActionRouter.Post("/collection", userService.UserCollectionByScenicID)
+	userActionRouter.Post("/wantCheckScenicInfo", userService.Register)
 
 	scenicService := service.NewScenicService()
 	groupRouter := app.Party("/scenic")
@@ -31,6 +31,7 @@ func main() {
 	groupRouter.Get("/get/{scenic_id:int64}", scenicService.GetScenic)
 	groupRouter.Delete("/delete/{scenic_id:int64}", scenicService.DeleteScenic)
 	groupRouter.Get("/getAll", scenicService.GetAllScenic)
+	groupRouter.Get("/getByCategory/{category_id:int64}", scenicService.GetScenicByCategoryID)
 	groupRouter.Post("/edit", scenicService.EditScenic)
 
 	categoryService := service.NewCategoryService()
@@ -38,6 +39,7 @@ func main() {
 	categoryRouter.Post("/add", categoryService.AddCategory)
 	categoryRouter.Delete("/delete/{category_id:int64}", categoryService.DeleteCategory)
 	categoryRouter.Get("/getAll", categoryService.GetAllCategory)
+	categoryRouter.Post("/edit", categoryService.EditCategory)
 
 	utilService := service.NewUtilService()
 	groupRouter = app.Party("/utils")
@@ -45,6 +47,6 @@ func main() {
 	groupRouter.Post("/uploadFile", utilService.UploadFile)
 	groupRouter.Get("/getMedia/{media_name:string}", utilService.GetMedia)
 
-	//app.Run(iris.Addr(":8080"))
-	 app.Run(iris.TLS(":443", "a.crt", "b.key"))
+	app.Run(iris.Addr(":8080"))
+	// app.Run(iris.TLS(":443", "a.crt", "b.key"))
 }

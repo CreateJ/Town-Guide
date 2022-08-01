@@ -54,3 +54,19 @@ func (u *CategoryServiceApi) DeleteCategory(ctx iris.Context) {
 	}
 	_, _ = ctx.JSON(Response{SuccessCode, "", nil})
 }
+
+func (u *CategoryServiceApi) EditCategory(ctx iris.Context) {
+	dto := model.CategoryInfoDTO{}
+	ctx.ReadJSON(&dto)
+	if dto.ID <= 0 {
+		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
+		return
+	}
+	err := model.EditCategory(&dto)
+	if err != nil {
+		ctx.JSON(Response{ErrorCode, "修改失败", nil})
+		return
+	}
+
+	ctx.JSON(Response{SuccessCode, "", nil})
+}

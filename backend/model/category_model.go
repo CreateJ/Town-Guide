@@ -1,17 +1,20 @@
 package model
 
 import (
+	"errors"
 	"town-guide/dao"
 )
 
 type CategoryInfoDTO struct {
 	ID   int64  `json:"id"`
 	Name string `json:"name"`
+	Icon string `json:"icon"`
 }
 
 func AddCategory(categoryInfo *CategoryInfoDTO) (*CategoryInfoDTO, error) {
 	info := &dao.TbCategory{
 		Name: categoryInfo.Name,
+		Icon: categoryInfo.Icon,
 	}
 	categoryDao := dao.GetCategoryDao()
 	id, err := categoryDao.Insert(info)
@@ -34,6 +37,7 @@ func QueryAllCategory() *[]CategoryInfoDTO {
 		temp := CategoryInfoDTO{
 			ID:   info.ID,
 			Name: info.Name,
+			Icon: info.Icon,
 		}
 		result = append(result, temp)
 	}
@@ -54,6 +58,7 @@ func QueryCategoryByID(id int64) *CategoryInfoDTO {
 	return &CategoryInfoDTO{
 		ID:   info.ID,
 		Name: info.Name,
+		Icon: info.Icon,
 	}
 }
 
@@ -61,7 +66,24 @@ func DeleteCategoryByID(id int64) error {
 	if id <= 0 {
 		return nil
 	}
-
 	categoryDao := dao.GetCategoryDao()
 	return categoryDao.DeleteOne(id)
+}
+
+func EditCategory(categoryInfo *CategoryInfoDTO) error {
+	if categoryInfo.ID <= 0 {
+		return errors.New("id err")
+	}
+
+	categoryDao := dao.GetCategoryDao()
+	info := &dao.TbCategory{
+		ID:           categoryInfo.ID,
+		Name:         categoryInfo.Name,
+		Icon:         categoryInfo.Icon,
+	}
+	_, err := categoryDao.Edit(info)
+	if err != nil {
+		return err
+	}
+	return nil
 }

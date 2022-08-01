@@ -95,7 +95,7 @@ func GetUserDetail(openID string) *UserInfoDTO {
 					VideoName:     scenicInfo.VideoName,
 					Tag:          scenicInfo.Tag,
 					OpenTime:     scenicInfo.OpenTime,
-					CheckNum:     scenicInfo.CheckNum,
+					ClockNum:     scenicInfo.ClockNum,
 				}
 				clockList = append(clockList, temp)
 			}
@@ -120,7 +120,7 @@ func GetUserDetail(openID string) *UserInfoDTO {
 					VideoName:     scenicInfo.VideoName,
 					Tag:          scenicInfo.Tag,
 					OpenTime:     scenicInfo.OpenTime,
-					CheckNum:     scenicInfo.CheckNum,
+					ClockNum:     scenicInfo.ClockNum,
 				}
 				collectionList = append(collectionList, temp)
 			}

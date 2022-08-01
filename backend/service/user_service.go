@@ -69,31 +69,49 @@ func (u *UserServiceApi) GetUserDetail(ctx iris.Context) {
 }
 
 func (u *UserServiceApi) UserClockByScenicID(ctx iris.Context) {
-	openId := ctx.Params().Get("open_id")
-	scenicID, err := ctx.Params().GetInt64("scenic_id")
-
-	if err != nil || openId == "" || scenicID <= 0 {
+	dto := model.UserActionDTO{}
+	ctx.ReadJSON(&dto)
+	if dto.OpenID == "" || dto.ScenicID == 0 || dto.ActionState == 0 {
 		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
 		return
 	}
 
-	userBaseInfo := model.GetUserBaseInfo(openId)
-	if userBaseInfo == nil {
-		_, _ = ctx.JSON(Response{ErrorCode, "获取不到该用户信息", nil})
+	if dto.ActionState == 2 {
+		if !model.UserClock(dto.OpenID, dto.ScenicID) {
+			_, _ = ctx.JSON(Response{ErrorCode, "打卡失败", nil})
+			return
+		}
+		_, _ = ctx.JSON(Response{SuccessCode, "打卡成功", nil})
 		return
 	}
-	scenicInfo := model.QueryScenicByID(scenicID)
-	if scenicInfo == nil {
-		_, _ = ctx.JSON(Response{ErrorCode, "获取不到该景区信息", nil})
+	_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
+	return
+}
+
+func (u *UserServiceApi) UserCollectionByScenicID(ctx iris.Context) {
+	dto := model.UserActionDTO{}
+	ctx.ReadJSON(&dto)
+	if dto.OpenID == "" || dto.ScenicID == 0 || dto.ActionState == 0 {
+		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
 		return
 	}
 
-	state := model.GetUserClockState(openId, scenicID)
-	if state {
-		_, _ = ctx.JSON(Response{ErrorCode, "已打卡", nil})
+	if dto.ActionState == 2 {
+		if !model.UserCollection(dto.OpenID, dto.ScenicID) {
+			_, _ = ctx.JSON(Response{ErrorCode, "收藏失败", nil})
+			return
+		}
+		_, _ = ctx.JSON(Response{SuccessCode, "收藏成功", nil})
 		return
 	}
-
-	_ = model.UserClock(openId, scenicID)
-	_, _ = ctx.JSON(Response{SuccessCode, "", nil})
+	if dto.ActionState == 1 {
+		if !model.UserCancelCollection(dto.OpenID, dto.ScenicID) {
+			_, _ = ctx.JSON(Response{ErrorCode, "取消收藏失败", nil})
+			return
+		}
+		_, _ = ctx.JSON(Response{SuccessCode, "取消收藏成功", nil})
+		return
+	}
+	_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
+	return
 }
