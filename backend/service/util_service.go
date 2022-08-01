@@ -20,7 +20,7 @@ func NewUtilService() *UtilServiceApi {
 
 func (u *UtilServiceApi) UploadFile(ctx iris.Context) {
 	fileType := ctx.FormValue("file_type")
-	if fileType != "pic" && fileType != "video" {
+	if fileType != "pic" && fileType != "media" {
 		_, _ = ctx.JSON(Response{ErrorCode, "文件类型错误", nil})
 		return
 	}
@@ -66,9 +66,9 @@ func (u *UtilServiceApi) GetPic(ctx iris.Context) {
 	_, _ = ctx.Write(file)
 }
 
-func (c *UtilServiceApi) GetVideo(ctx iris.Context) {
-	fileName := ctx.Params().Get("video_name")
-	filePath := "./../file/video/" + fileName
+func (c *UtilServiceApi) GetMedia(ctx iris.Context) {
+	fileName := ctx.Params().Get("media_name")
+	filePath := "./../file/media/" + fileName
 	f, err := ioutil.ReadFile(filePath) // 根据文件路径获取文件字节数组
 	if err != nil {
 		return
