@@ -1,4 +1,12 @@
 <!--index.wxml-->
 <view class="container">
-  地图
+  <map
+    class="map"
+    name="map"
+    id="easyMap"
+    latitude="23.560987"
+    longitude="116.829499"
+    subkey="TZQBZ-Q7GCV-BT4PS-UP4I6-TEHLJ-VEBOO"
+  >
+  </map>
 </view>

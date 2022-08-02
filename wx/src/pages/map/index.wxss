@@ -1,0 +1,10 @@
+.container {
+  height: 100vh;
+  background: black;
+  padding: 0;
+}
+
+.map {
+  height: 100%;
+  width: 100%;
+}

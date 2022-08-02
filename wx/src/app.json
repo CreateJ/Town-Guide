@@ -1,7 +1,7 @@
 {
   "pages":[
-    "pages/index/index",
     "pages/map/index",
+    "pages/index/index",
     "pages/visits/index",
     "pages/mine/index",
     "pages/logs/logs"
@@ -17,7 +17,7 @@
   "tabBar": {
     "list": [
       {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/map/index",
         "text": "地图"
       },
       {
