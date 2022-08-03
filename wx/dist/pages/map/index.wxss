@@ -1,7 +1,14 @@
-.container {
+.map-container {
   height: 100vh;
   background: black;
-  padding: 0;
+  display: flex;
+  flex-flow: column nowrap;
+  overflow: hidden;
+}
+
+.map-box {
+  flex: 1;
+  overflow: hidden;
 }
 
 .map {

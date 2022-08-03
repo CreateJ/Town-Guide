@@ -1,8 +1,16 @@
-<view class="nav-bar" style="height:{{navBarHeight}}px;">
-  <input
-    class="search"
-    placeholder="输入关键词！"
-    style="height:{{menuHeight}}px; min-height:{{menuHeight}}px; line-height:{{menuHeight}}px; left:{{menuRight}}px; top:{{menuTop}}px;"></input>
+<view class="nav-bar" style="height:{{ navBarHeight }}px">
+  <!--  <input-->
+  <!--    class="search"-->
+  <!--    placeholder="输入关键词！"-->
+  <!--    style="height:{{menuHeight}}px; min-height:{{menuHeight}}px; line-height:{{menuHeight}}px; left:{{menuRight}}px; top:{{menuTop}}px;"></input>-->
+  <view
+    class="button-box"
+    style="height:{{menuHeight}}px;min-height:{{menuHeight}}px;line-height:{{menuHeight}}px;top:{{menuTop}}px;"
+  >
+    <button class="header-button" style="background-image: url({{button1Bg}})" bindtap="clickCategory"></button>
+    <button class="header-button" style="background-image: url({{button2Bg}})" bindtap="clickList"></button>
+  </view>
+
 </view>
 
 <!-- 占位，高度与顶部栏一样 -->

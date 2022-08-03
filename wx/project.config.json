@@ -37,11 +37,15 @@
     "packNpmManually": false,
     "packNpmRelationList": [],
     "minifyWXSS": true,
-    "showES6CompileOption": false
+    "showES6CompileOption": false,
+    "useStaticServer": true,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "minifyWXML": true
   },
   "compileType": "miniprogram",
   "libVersion": "2.17.0",
-  "appid": "touristappid",
+  "appid": "wx942fe69ede395b15",
   "projectname": "miniprogram-92",
   "editorSetting": {
     "tabIndent": "insertSpaces",

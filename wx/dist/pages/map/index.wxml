@@ -1,7 +1,7 @@
-<!--index.wxml-->
-<view class="container">
+<!--map-index.wxml-->
+<view class="map-container">
   <navigation-bar default-data="{{defaultData}}"></navigation-bar>
-  <view class="map-container">
+  <view class="map-box">
     <map
       class="map"
       name="map"

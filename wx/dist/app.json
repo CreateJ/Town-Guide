@@ -15,6 +15,7 @@
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents",
   "tabBar": {
     "list": [
       {
@@ -26,7 +27,7 @@
         "text": "到访"
       },
       {
-        "pagePath": "pages/mine/index",
+        "pagePath": "pages/index/index",
         "text": "我的"
       }
     ]
