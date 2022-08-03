@@ -22,6 +22,7 @@ type TbScenicInfo struct {
 	OpenTime     string `db:"open_time"`
 	ClockNum     int64  `db:"clock_num"`
 	Banner       string `db:"banner"`
+	Location     string `db:"location"`
 	CreateTime   int64  `db:"create_time"`
 	UpdateTime   int64  `db:"update_time"`
 	CategoryID   int64  `db:"category_id"`
@@ -116,6 +117,11 @@ func (dao *ScenicDao) Edit(a *TbScenicInfo) (id int64, err error) {
 	if a.Icon != "" {
 		sql += " , icon=?"
 		params = append(params, a.Icon)
+	}
+
+	if a.Location != "" {
+		sql += " , location=?"
+		params = append(params, a.Location)
 	}
 
 	if a.VideoName != "" {

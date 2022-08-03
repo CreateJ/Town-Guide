@@ -21,6 +21,7 @@ type ScenicInfoDTO struct {
 	CategoryID   int64  `json:"category_id"`
 	Category     string `json:"category"`
 	Banner       string `json:"banner"` // 用｜分割
+	Location     string `json:"location"`
 }
 
 func AddScenic(scenicInfo *ScenicInfoDTO) (*ScenicInfoDTO, error) {
@@ -38,6 +39,7 @@ func AddScenic(scenicInfo *ScenicInfoDTO) (*ScenicInfoDTO, error) {
 		CreateTime:   time.Now().Unix(),
 		UpdateTime:   time.Now().Unix(),
 		Banner:       scenicInfo.Banner,
+		Location:     scenicInfo.Location,
 	}
 
 	scenicDao := dao.GetScenicDao()
@@ -84,6 +86,7 @@ func QueryAllScenic() *[]ScenicInfoDTO {
 			CategoryID:   categoryID,
 			Banner:       scenicInfo.Banner,
 			Category:     category,
+			Location:     scenicInfo.Location,
 		}
 		result = append(result, temp)
 	}
@@ -113,6 +116,7 @@ func QueryScenicByCategoryID(categoryID int64) *[]ScenicInfoDTO {
 			ClockNum:     scenicInfo.ClockNum,
 			CategoryID:   scenicInfo.CategoryID,
 			Banner:       scenicInfo.Banner,
+			Location:     scenicInfo.Location,
 		}
 		result = append(result, temp)
 	}
@@ -153,6 +157,7 @@ func QueryScenicByID(id int64) *ScenicInfoDTO {
 		CategoryID:   categoryID,
 		Banner:       scenicInfo.Banner,
 		Category:     category,
+		Location:     scenicInfo.Location,
 	}
 }
 
@@ -184,6 +189,7 @@ func EditScenic(scenicInfo *ScenicInfoDTO) error {
 		OpenTime:     scenicInfo.OpenTime,
 		Banner:       scenicInfo.Banner,
 		CategoryID:   scenicInfo.CategoryID,
+		Location:     scenicInfo.Location,
 	}
 	_, err := scenicDao.Edit(info)
 	if err != nil {
