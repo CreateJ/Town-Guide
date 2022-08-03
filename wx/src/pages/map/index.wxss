@@ -2,6 +2,14 @@
   height: 100vh;
   background: black;
   padding: 0;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.map-container {
+  display: block;
+  height: 100vh;
+  flex: 1;
 }
 
 .map {

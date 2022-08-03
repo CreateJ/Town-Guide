@@ -1,12 +1,14 @@
 <!--index.wxml-->
 <view class="container">
-  <map
-    class="map"
-    name="map"
-    id="easyMap"
-    latitude="23.560987"
-    longitude="116.829499"
-    subkey="TZQBZ-Q7GCV-BT4PS-UP4I6-TEHLJ-VEBOO"
-  >
-  </map>
+  <navigation-bar default-data="{{defaultData}}"></navigation-bar>
+  <view class="map-container">
+    <map
+      class="map"
+      name="map"
+      id="easyMap"
+      latitude="23.560987"
+      longitude="116.829499"
+    >
+    </map>
+  </view>
 </view>

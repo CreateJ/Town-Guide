@@ -10,7 +10,8 @@ module.exports = {
     'pages/map/index': './pages/map/index.js',
     'pages/visits/index': './pages/visits/index.js',
     'pages/mine/index': './pages/mine/index.js',
-    'pages/logs/logs': './pages/logs/logs.js'
+    'pages/logs/logs': './pages/logs/logs.js',
+    'components/navigation-bar/navigation-bar': './components/navigation-bar/navigation-bar'
   },
   module: {
     rules: [

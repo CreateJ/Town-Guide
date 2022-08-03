@@ -21,7 +21,6 @@
 
 <script>
 import MediaUpload from '@/components/MediaUpload'
-// import api from '@/api'
 
 export default {
   name: 'MapEdit',
