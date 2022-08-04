@@ -1,8 +1,4 @@
-<view class="nav-bar" style="height:{{ navBarHeight }}px">
-  <!--  <input-->
-  <!--    class="search"-->
-  <!--    placeholder="输入关键词！"-->
-  <!--    style="height:{{menuHeight}}px; min-height:{{menuHeight}}px; line-height:{{menuHeight}}px; left:{{menuRight}}px; top:{{menuTop}}px;"></input>-->
+<view class="nav-bar" style="height:{{ active === 2 || active === null ? navBarHeight : (navBarHeight + 55)}}px">
   <view
     class="button-box"
     style="height:{{menuHeight}}px;min-height:{{menuHeight}}px;line-height:{{menuHeight}}px;top:{{menuTop}}px;"
@@ -11,7 +7,14 @@
     <button class="header-button" style="background-image: url({{button2Bg}})" bindtap="clickList"></button>
   </view>
 
+  <view wx:if="{{ active !== null }}" class="categories-box" style="top: {{navBarHeight}}px">
+    <view wx:for="{{categoryList}}" wx:key="index" class="category-item" bindtap="clickCategoryItem" data-type="{{item.type}}">
+      <image class="categories-image" src="{{ activeCategory !== item.type ? item.icon : item.iconActive}}" alt=""/>
+      <view style="color:{{activeCategory !== item.type ? '#aaa' : 'blue'}}">{{item.name}}</view>
+    </view>
+  </view>
+
 </view>
 
 <!-- 占位，高度与顶部栏一样 -->
-<view style="height:{{navBarHeight}}px;"></view>
+<view style="height:{{active === 2 || active === null ? navBarHeight : (navBarHeight + 55)}}px;"></view>

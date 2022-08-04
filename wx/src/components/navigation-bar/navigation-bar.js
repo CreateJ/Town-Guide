@@ -18,35 +18,62 @@ Component({
     menuHeight: app.globalData.menuHeight,
     active: null,
     button1Bg: '../../assets/image/point.png',
-    button2Bg: '../../assets/image/list.png'
+    button2Bg: '../../assets/image/list.png',
+    categoryList: [
+      {
+        type: 'wharf',
+        name: '码头',
+        icon: '../../assets/image/categories/1-1.png',
+        iconActive: '../../assets/image/categories/1-2.png'
+      },
+      {
+        type: 'exhibition', // 展览馆
+        name: '展览馆',
+        icon: '../../assets/image/categories/2-1.png',
+        iconActive: '../../assets/image/categories/2-2.png'
+      },
+      {
+        type: 'ancestral',
+        name: '祠堂',
+        icon: '../../assets/image/categories/3-1.png',
+        iconActive: '../../assets/image/categories/3-2.png'
+      }
+    ],
+    activeCategory: null
   },
   attached: function () {
   },
   methods: {
+    clickCategoryItem ({currentTarget}) {
+      console.log(currentTarget.dataset.type)
+      this.setData({
+        activeCategory: currentTarget.dataset.type
+      })
+    },
     clickCategory() {
-      if (this.data.active === 0) {
-        this.data.active = null
+      if (this.data.active === 1) {
         this.setData({
+          active: null,
           button1Bg: '../../assets/image/point.png'
         })
       } else {
-        this.data.active = 0
         this.setData({
+          active: 1,
           button1Bg: '../../assets/image/point-active.png',
           button2Bg: '../../assets/image/list.png',
         })
       }
     },
     clickList() {
-      if (this.data.active === 1) {
-        this.data.active = null
+      if (this.data.active === 2) {
         this.setData({
+          active: null,
           button2Bg: '../../assets/image/list.png',
           button1Bg: '../../assets/image/point.png'
         })
       } else {
-        this.data.active = 1
         this.setData({
+          active: 2,
           button2Bg: '../../assets/image/list-active.png',
           button1Bg: '../../assets/image/point.png',
         })
