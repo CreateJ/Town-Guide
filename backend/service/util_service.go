@@ -139,6 +139,13 @@ func (c *UtilServiceApi) GetWeather(ctx iris.Context) {
 	body, _ := ioutil.ReadAll(resp.Body)
 	var res WeatherResult
 	json.Unmarshal(body, &res)
-	res.Now.Icon = res.Now.Icon+".png"
+	text := "今天温度" + res.Now.FeelsLike+ "°C," + res.Now.Text
+	if strings.Contains(res.Now.Text, "晴") {
+		text += ",请注意防晒噢"
+	} else if strings.Contains(res.Now.Text, "雨") {
+		text += ",请注意带伞噢"
+	}
+	res.Now.Text = text
+	res.Now.Icon = res.Now.Icon + ".png"
 	_, _ = ctx.JSON(Response{SuccessCode, "", res.Now})
 }
