@@ -7,22 +7,24 @@ import (
 )
 
 type ScenicInfoDTO struct {
-	ID           int64  `json:"id"`
-	Name         string `json:"name"`
-	LocationDesc string `json:"location_desc"`
-	Description  string `json:"description"`
-	Intro        string `json:"intro"`
-	PicName      string `json:"pic_name"`
-	Icon         string `json:"icon"`
-	VideoName    string `json:"video_name"`
-	Tag          string `json:"tag"`
-	OpenTime     string `json:"open_time"`
-	ClockNum     int64  `json:"clock_num"`
-	CategoryID   int64  `json:"category_id"`
-	Category     string `json:"category"`
-	Banner       string `json:"banner"` // 用｜分割
-	Location     string `json:"location"`
-	Audio        string `json:"audio"`
+	ID             int64  `json:"id"`
+	Name           string `json:"name"`
+	LocationDesc   string `json:"location_desc"`
+	Description    string `json:"description"`
+	Intro          string `json:"intro"`
+	PicName        string `json:"pic_name"`
+	Icon           string `json:"icon"`
+	VideoName      string `json:"video_name"`
+	Tag            string `json:"tag"`
+	OpenTime       string `json:"open_time"`
+	ClockNum       int64  `json:"clock_num"`
+	ClockIcon      string `json:"clock_icon"`
+	CategoryID     int64  `json:"category_id"`
+	Category       string `json:"category"`
+	Banner         string `json:"banner"` // 用｜分割
+	Location       string `json:"location"`
+	Audio          string `json:"audio"`
+	UserClockState int8   `json:"user_clock_state"`
 }
 
 func AddScenic(scenicInfo *ScenicInfoDTO) (*ScenicInfoDTO, error) {
@@ -42,6 +44,7 @@ func AddScenic(scenicInfo *ScenicInfoDTO) (*ScenicInfoDTO, error) {
 		Banner:       scenicInfo.Banner,
 		Location:     scenicInfo.Location,
 		Audio:        scenicInfo.Audio,
+		ClockIcon:    scenicInfo.ClockIcon,
 	}
 
 	scenicDao := dao.GetScenicDao()
@@ -90,6 +93,7 @@ func QueryAllScenic() *[]ScenicInfoDTO {
 			Category:     category,
 			Location:     scenicInfo.Location,
 			Audio:        scenicInfo.Audio,
+			ClockIcon:    scenicInfo.ClockIcon,
 		}
 		result = append(result, temp)
 	}
@@ -121,6 +125,7 @@ func QueryScenicByCategoryID(categoryID int64) *[]ScenicInfoDTO {
 			Banner:       scenicInfo.Banner,
 			Location:     scenicInfo.Location,
 			Audio:        scenicInfo.Audio,
+			ClockIcon:    scenicInfo.ClockIcon,
 		}
 		result = append(result, temp)
 	}
@@ -163,6 +168,7 @@ func QueryScenicByID(id int64) *ScenicInfoDTO {
 		Category:     category,
 		Location:     scenicInfo.Location,
 		Audio:        scenicInfo.Audio,
+		ClockIcon:    scenicInfo.ClockIcon,
 	}
 }
 
@@ -196,6 +202,7 @@ func EditScenic(scenicInfo *ScenicInfoDTO) error {
 		CategoryID:   scenicInfo.CategoryID,
 		Location:     scenicInfo.Location,
 		Audio:        scenicInfo.Audio,
+		ClockIcon:    scenicInfo.ClockIcon,
 	}
 	_, err := scenicDao.Edit(info)
 	if err != nil {

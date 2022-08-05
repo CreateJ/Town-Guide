@@ -1,8 +1,9 @@
 package service
 
 import (
-	"github.com/kataras/iris/v12"
 	"town-guide/model"
+
+	"github.com/kataras/iris/v12"
 )
 
 const SuccessCode = 2
@@ -39,6 +40,10 @@ func (u *UserServiceApi) GetUserInfo(ctx iris.Context) {
 
 type GetOpenIDDTO struct {
 	Code string `json:"code"`
+}
+
+type OpenIDDTO struct {
+	OpenID string `json:"open_id"`
 }
 
 func (u *UserServiceApi) Register(ctx iris.Context) {

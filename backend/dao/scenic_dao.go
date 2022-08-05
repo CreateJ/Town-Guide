@@ -27,6 +27,7 @@ type TbScenicInfo struct {
 	UpdateTime   int64  `db:"update_time"`
 	CategoryID   int64  `db:"category_id"`
 	Audio        string `db:"audio"`
+	ClockIcon    string `db:"clock_icon"`
 }
 
 type ScenicDao struct {
@@ -103,6 +104,10 @@ func (dao *ScenicDao) Edit(a *TbScenicInfo) (id int64, err error) {
 	if a.Intro != "" {
 		sql += " , intro=?"
 		params = append(params, a.Intro)
+	}
+	if a.ClockIcon != "" {
+		sql += " , clock_icon=?"
+		params = append(params, a.ClockIcon)
 	}
 
 	if a.Description != "" {

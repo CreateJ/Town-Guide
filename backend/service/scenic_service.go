@@ -15,6 +15,9 @@ func NewScenicService() *ScenicServiceApi {
 
 func (u *ScenicServiceApi) GetScenic(ctx iris.Context) {
 	scenicID, err := ctx.Params().GetInt64("scenic_id")
+	dto := OpenIDDTO{}
+
+	_ = ctx.ReadQuery(&dto)
 	if err != nil || scenicID <= 0 {
 		ctx.JSON(Response{ErrorCode, "参数错误", nil})
 		return
@@ -24,6 +27,10 @@ func (u *ScenicServiceApi) GetScenic(ctx iris.Context) {
 	if info == nil {
 		ctx.JSON(Response{ErrorCode, "获取景区信息失败", nil})
 		return
+	}
+
+	if dto.OpenID != "" && model.GetUserClockState(dto.OpenID, scenicID) {
+		info.UserClockState = 2
 	}
 
 	ctx.JSON(Response{SuccessCode, "", info})

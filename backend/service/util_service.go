@@ -3,7 +3,6 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/kataras/iris/v12"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -11,6 +10,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/kataras/iris/v12"
 )
 
 type UtilServiceApi struct{}
@@ -60,7 +61,6 @@ func (u *UtilServiceApi) GetPic(ctx iris.Context) {
 
 	ctx.Header("Content-Type", "image/png")
 	file, err := ioutil.ReadFile("./../file/pic/" + picName)
-	fmt.Println(err)
 	if err != nil {
 		return
 	}
@@ -87,13 +87,11 @@ func (c *UtilServiceApi) GetMedia(ctx iris.Context) {
 	startPosition := 0 // 开始读取的位置
 	endPosition := 0   // 结束读取的位置
 	if reqBlockRange != nil {
-		//safari
 		startPosition, _ = strconv.Atoi(reqBlockRange[0])
 		if len(reqBlockRange) > 1 && reqBlockRange[1] != "" { // 如果Range有截止位置，则将截止位置赋值
 			tmp, _ := strconv.Atoi(reqBlockRange[1])
 			endPosition = tmp
 		} else { // 否则读取全部文件
-			// chrome 等
 			endPosition = fileSize - 1
 		}
 	}
@@ -122,6 +120,7 @@ func (c *UtilServiceApi) GetMedia(ctx iris.Context) {
 type WeatherResult struct {
 	Now NowResult `json:"now"`
 }
+
 type NowResult struct {
 	FeelsLike string `json:"feelsLike"`
 	Icon      string `json:"icon"`
@@ -132,20 +131,20 @@ func (c *UtilServiceApi) GetWeather(ctx iris.Context) {
 	url := "https://devapi.qweather.com/v7/weather/now?location=116.83,23.56&key=79d8f249259a45349d539b2d7e7d02b1"
 	resp, err := http.Get(url)
 	if err != nil {
-		_, _ = ctx.JSON(Response{SuccessCode, "", nil})
+		_, _ = ctx.JSON(Response{ErrorCode, "", nil})
 		return
 	}
 
 	body, _ := ioutil.ReadAll(resp.Body)
 	var res WeatherResult
 	json.Unmarshal(body, &res)
-	text := "今天温度" + res.Now.FeelsLike+ "°C," + res.Now.Text
+	text := "今天温度" + res.Now.FeelsLike + "°C," + res.Now.Text
 	if strings.Contains(res.Now.Text, "晴") {
 		text += ",请注意防晒噢"
 	} else if strings.Contains(res.Now.Text, "雨") {
 		text += ",请注意带伞噢"
 	}
 	res.Now.Text = text
-	res.Now.Icon = res.Now.Icon + ".png"
+	res.Now.Icon = res.Now.Icon + ".svg"
 	_, _ = ctx.JSON(Response{SuccessCode, "", res.Now})
 }
