@@ -9,9 +9,10 @@ import (
 )
 
 type TbCategory struct {
-	ID   int64  `db:"id,omitempty"`
-	Name string `db:"name"`
-	Icon string `db:"icon"`
+	ID         int64  `db:"id,omitempty"`
+	Name       string `db:"name"`
+	Icon       string `db:"icon"`
+	IconActive string `db:"icon_active"`
 }
 
 type CategoryDao struct {
@@ -66,22 +67,22 @@ func (dao *CategoryDao) Edit(a *TbCategory) (id int64, err error) {
 	}
 	sql := " update tb_category set "
 	var params []interface{}
-	var sqls[]string
+	var sqls []string
 	if a.Name != "" {
-		sqls = append(sqls," name=?")
+		sqls = append(sqls, " name=?")
 		params = append(params, a.Name)
 	}
 
 	if a.Icon != "" {
-		sqls = append(sqls," icon=?")
+		sqls = append(sqls, " icon=?")
 		params = append(params, a.Icon)
 	}
 
-	if len(sqls)==0 {
+	if len(sqls) == 0 {
 		return 0, nil
 	}
 	strings.Join(sqls, ",")
-	sql += strings.Join(sqls, ",")+" where id=" + fmt.Sprintf("%d", a.ID)
+	sql += strings.Join(sqls, ",") + " where id=" + fmt.Sprintf("%d", a.ID)
 	rs, err := dao.runner.Exec(sql, params...)
 	fmt.Println(err)
 	if err != nil {

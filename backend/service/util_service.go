@@ -1,15 +1,16 @@
 package service
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/kataras/iris/v12"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/kataras/iris/v12"
 )
 
 type UtilServiceApi struct{}
@@ -116,4 +117,28 @@ func (c *UtilServiceApi) GetMedia(ctx iris.Context) {
 		ctx.StatusCode(200)
 		_ = ctx.SendFile(filePath, fileName)
 	}
+}
+
+type WeatherResult struct {
+	Now NowResult `json:"now"`
+}
+type NowResult struct {
+	FeelsLike string `json:"feelsLike"`
+	Icon      string `json:"icon"`
+	Text      string `json:"text"`
+}
+
+func (c *UtilServiceApi) GetWeather(ctx iris.Context) {
+	url := "https://devapi.qweather.com/v7/weather/now?location=116.83,23.56&key=79d8f249259a45349d539b2d7e7d02b1"
+	resp, err := http.Get(url)
+	if err != nil {
+		_, _ = ctx.JSON(Response{SuccessCode, "", nil})
+		return
+	}
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	var res WeatherResult
+	json.Unmarshal(body, &res)
+	res.Now.Icon = res.Now.Icon+".png"
+	_, _ = ctx.JSON(Response{SuccessCode, "", res.Now})
 }

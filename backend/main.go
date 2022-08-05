@@ -45,7 +45,8 @@ func main() {
 	groupRouter.Get("/getPic/{pic_name:string}", utilService.GetPic)
 	groupRouter.Post("/uploadFile", utilService.UploadFile)
 	groupRouter.Get("/getMedia/{media_name:string}", utilService.GetMedia)
+	groupRouter.Get("/getWeather", utilService.GetWeather)
 
-///	app.Run(iris.Addr(":8080"))
+	// app.Run(iris.Addr(":8080"))
 	app.Run(iris.TLS(":443", "a.crt", "b.key"))
 }

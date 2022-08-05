@@ -6,15 +6,17 @@ import (
 )
 
 type CategoryInfoDTO struct {
-	ID   int64  `json:"id"`
-	Name string `json:"name"`
-	Icon string `json:"icon"`
+	ID         int64  `json:"id"`
+	Name       string `json:"name"`
+	Icon       string `json:"icon"`
+	IconActive string `json:"icon_active"`
 }
 
 func AddCategory(categoryInfo *CategoryInfoDTO) (*CategoryInfoDTO, error) {
 	info := &dao.TbCategory{
-		Name: categoryInfo.Name,
-		Icon: categoryInfo.Icon,
+		Name:       categoryInfo.Name,
+		Icon:       categoryInfo.Icon,
+		IconActive: categoryInfo.IconActive,
 	}
 	categoryDao := dao.GetCategoryDao()
 	id, err := categoryDao.Insert(info)
@@ -35,9 +37,10 @@ func QueryAllCategory() *[]CategoryInfoDTO {
 	result := make([]CategoryInfoDTO, 0, len(*categoryInfos))
 	for _, info := range *categoryInfos {
 		temp := CategoryInfoDTO{
-			ID:   info.ID,
-			Name: info.Name,
-			Icon: info.Icon,
+			ID:         info.ID,
+			Name:       info.Name,
+			Icon:       info.Icon,
+			IconActive: info.IconActive,
 		}
 		result = append(result, temp)
 	}
@@ -56,9 +59,10 @@ func QueryCategoryByID(id int64) *CategoryInfoDTO {
 	}
 
 	return &CategoryInfoDTO{
-		ID:   info.ID,
-		Name: info.Name,
-		Icon: info.Icon,
+		ID:         info.ID,
+		Name:       info.Name,
+		Icon:       info.Icon,
+		IconActive: info.IconActive,
 	}
 }
 
@@ -77,9 +81,10 @@ func EditCategory(categoryInfo *CategoryInfoDTO) error {
 
 	categoryDao := dao.GetCategoryDao()
 	info := &dao.TbCategory{
-		ID:           categoryInfo.ID,
-		Name:         categoryInfo.Name,
-		Icon:         categoryInfo.Icon,
+		ID:         categoryInfo.ID,
+		Name:       categoryInfo.Name,
+		Icon:       categoryInfo.Icon,
+		IconActive: categoryInfo.IconActive,
 	}
 	_, err := categoryDao.Edit(info)
 	if err != nil {
