@@ -155,11 +155,12 @@ func (dao *ScenicDao) Edit(a *TbScenicInfo) (id int64, err error) {
 		params = append(params, a.Banner)
 	}
 
-	if a.CategoryID <= 0 {
+	if a.CategoryID > 0 {
 		sql += " , category_id=" + fmt.Sprintf("%d", a.CategoryID)
 	}
 
 	sql += " where id=" + fmt.Sprintf("%d", a.ID)
+	fmt.Println(sql)
 	rs, err := dao.runner.Exec(sql, params...)
 	if err != nil {
 		return 0, err
