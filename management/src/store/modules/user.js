@@ -1,4 +1,8 @@
-import { login, logout, getInfo } from '@/api/user'
+import {
+  // login,
+  logout,
+  getInfo
+} from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -32,16 +36,30 @@ const actions = {
   // user login
   login({ commit }, userInfo) {
     const { username, password } = userInfo
-    return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
+    console.log(userInfo)
+    if (username === 'dongliyijiao' && password === 'woaidongliyijiao') {
+      commit('SET_TOKEN', 'admin-token')
+      setToken('admin-token')
+      return Promise.resolve({
+        msg: 2,
+        data: {
+          token: 'admin-token'
+        }
       })
-    })
+    } else {
+      return Promise.reject('密码错误')
+    }
+    // return new Promise((resolve, reject) => {
+    //   login({ username: username.trim(), password: password }).then(response => {
+    //     console.log(response)
+    //     const { data } = response
+    //     commit('SET_TOKEN', data.token)
+    //     setToken(data.token)
+    //     resolve()
+    //   }).catch(error => {
+    //     reject(error)
+    //   })
+    // })
   },
 
   // get user info
