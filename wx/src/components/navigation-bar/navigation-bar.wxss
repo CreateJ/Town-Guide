@@ -40,13 +40,13 @@
   width: 100%;
   background: white;
   color: black;
-  height: 30px;
   display: flex;
+  overflow: hidden;
 }
 
 .category-item {
   width: 50px;
-  height: 80px;
+  height: 50px;
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
@@ -55,4 +55,9 @@
 .categories-image {
   width: 24px;
   height: 24px;
+}
+
+.all-nav-height-container {
+  /*border-bottom: 1px solid #ddd;*/
+  box-shadow: 0px 0px 15px rgba(204, 204, 204, 0.47);
 }

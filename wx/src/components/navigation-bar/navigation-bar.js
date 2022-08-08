@@ -19,66 +19,92 @@ Component({
     active: null,
     button1Bg: '../../assets/image/point.png',
     button2Bg: '../../assets/image/list.png',
-    categoryList: [
-      {
-        type: 'wharf',
-        name: '码头',
-        icon: '../../assets/image/categories/1-1.png',
-        iconActive: '../../assets/image/categories/1-2.png'
-      },
-      {
-        type: 'exhibition', // 展览馆
-        name: '展览馆',
-        icon: '../../assets/image/categories/2-1.png',
-        iconActive: '../../assets/image/categories/2-2.png'
-      },
-      {
-        type: 'ancestral',
-        name: '祠堂',
-        icon: '../../assets/image/categories/3-1.png',
-        iconActive: '../../assets/image/categories/3-2.png'
-      }
-    ],
+    animationData: {},
+    myAnimation: null,
+    categoryList: [],
     activeCategory: null
   },
-  attached: function () {
-  },
+
   methods: {
-    clickCategoryItem ({currentTarget}) {
-      console.log(currentTarget.dataset.type)
+    clickCategoryItem({ currentTarget }) {
       this.setData({
         activeCategory: currentTarget.dataset.type
       })
     },
     clickCategory() {
       if (this.data.active === 1) {
+        this.myAnimation.height(app.globalData.navBarHeight + 'px').step()
         this.setData({
+          animationData: this.myAnimation.export(),
           active: null,
           button1Bg: '../../assets/image/point.png'
         })
       } else {
-        this.setData({
-          active: 1,
-          button1Bg: '../../assets/image/point-active.png',
-          button2Bg: '../../assets/image/list.png',
-        })
+        this.changeTo1()
+        this.triggerEvent('switch', { url: '/pages/map/index' })
       }
     },
     clickList() {
-      if (this.data.active === 2) {
-        this.setData({
-          active: null,
-          button2Bg: '../../assets/image/list.png',
-          button1Bg: '../../assets/image/point.png'
-        })
-      } else {
-        this.setData({
-          active: 2,
-          button2Bg: '../../assets/image/list-active.png',
-          button1Bg: '../../assets/image/point.png',
-        })
+      if (this.data.active !== 2) {
+        this.changeTo2()
+        this.triggerEvent('switch', { url: '/pages/visits/index' })
       }
+    },
+    changeTo1() {
+      this.myAnimation.height((app.globalData.navBarHeight + 55) + 'px').step()
+      this.setData({
+        active: 1,
+        animationData: this.myAnimation.export(),
+        button1Bg: '../../assets/image/point-active.png',
+        button2Bg: '../../assets/image/list.png'
+      })
+    },
+    changeTo2() {
+      this.myAnimation.height(app.globalData.navBarHeight + 'px').step()
+      this.setData({
+        active: 2,
+        animationData: this.myAnimation.export(),
+        button2Bg: '../../assets/image/list-active.png',
+        button1Bg: '../../assets/image/point.png',
+      })
     }
   },
-  lifetimes: {},
+  lifetimes: {
+    attached: function () {
+      this.myAnimation = wx.createAnimation({
+        duration: 500,
+        timingFunction: 'ease'
+      })
+
+      wx.request({
+        url: 'https://guide.time-traveler.cn/category/getAll',
+        method: 'GET',
+        success: (res) => {
+          let list = res.data.data.map(item => {
+            return {
+              name: item.name,
+              icon: 'https://guide.time-traveler.cn/utils/getPic/'+ item.icon,
+              iconActive: 'https://guide.time-traveler.cn/utils/getPic/'+ item.icon_active,
+              id: item.id
+            }
+          })
+          this.setData({
+            categoryList: list
+          })
+        }
+      })
+    },
+  },
+  pageLifetimes: {
+    // 组件所在页面的生命周期函数
+    show: function () {
+      const active = getCurrentPages()[0].route.includes('map') ? 1 : 2
+      this['changeTo' + active]()
+      this.setData({
+        active
+      })
+    },
+    hide: function () {
+    }
+  },
 })

@@ -15,6 +15,14 @@ function addCategory(data) {
   })
 }
 
+function editCategory(data) {
+  return request({
+    url: '/category/edit',
+    method: 'post',
+    data
+  })
+}
+
 function deleteCategory(data) {
   return request({
     url: '/category/delete/' + data.id,
@@ -25,5 +33,6 @@ function deleteCategory(data) {
 export default {
   getCategoryList,
   addCategory,
-  deleteCategory
+  deleteCategory,
+  editCategory
 }

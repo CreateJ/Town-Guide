@@ -1,6 +1,6 @@
-<!--map-index.wxml-->
+<!--map-scenic.wxml-->
 <view class="map-container">
-  <navigation-bar default-data="{{defaultData}}"></navigation-bar>
+  <navigation-bar bind:switch="switchTab" default-data="{{defaultData}}"></navigation-bar>
   <view class="map-box">
     <map
       class="map"

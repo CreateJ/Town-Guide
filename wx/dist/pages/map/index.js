@@ -1,27 +1,26 @@
 /******/ (() => { // webpackBootstrap
 var __webpack_exports__ = {};
-// index.js
+// scenic.js
 // 获取应用实例
 const app = getApp();
 Page({
   data: {
     msg: '你好',
     defaultData: {
-      title: '我的主页'
+      title: '地图'
     }
   },
 
   // 事件处理函数
-  onLoad() {// wx.request({
-    //   url: 'https://guide.time-traveler.cn/user/1',
-    //   method: 'GET',
-    //   success(res) {
-    //     console.log(res)
-    //   }
-    // })
-  },
+  onLoad() {},
 
-  onReady() {}
+  onReady() {},
+
+  switchTab(e) {
+    wx.switchTab({
+      url: e.detail.url
+    });
+  }
 
 });
 /******/ })()

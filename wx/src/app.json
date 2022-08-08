@@ -3,6 +3,7 @@
     "pages/map/index",
     "pages/index/index",
     "pages/visits/index",
+    "pages/visits/scenic/scenic",
     "pages/mine/index",
     "pages/logs/logs"
   ],
@@ -17,18 +18,25 @@
   "sitemapLocation": "sitemap.json",
   "lazyCodeLoading": "requiredComponents",
   "tabBar": {
+    "selectedColor": "#9EDFF2",
     "list": [
       {
         "pagePath": "pages/map/index",
-        "text": "地图"
+        "text": "地图",
+        "iconPath": "/assets/image/tabBar/map-1.png",
+        "selectedIconPath": "/assets/image/tabBar/map-2.png"
       },
       {
         "pagePath": "pages/visits/index",
-        "text": "到访"
+        "text": "到访",
+        "iconPath": "/assets/image/tabBar/visit-1.png",
+        "selectedIconPath": "/assets/image/tabBar/visit-2.png"
       },
       {
-        "pagePath": "pages/index/index",
-        "text": "我的"
+        "pagePath": "pages/mine/index",
+        "text": "我的",
+        "iconPath": "/assets/image/tabBar/mine-1.png",
+        "selectedIconPath": "/assets/image/tabBar/mine-2.png"
       }
     ]
   }

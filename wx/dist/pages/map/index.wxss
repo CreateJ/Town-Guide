@@ -1,6 +1,5 @@
 .map-container {
   height: 100vh;
-  background: black;
   display: flex;
   flex-flow: column nowrap;
   overflow: hidden;

@@ -1,4 +1,4 @@
-<!--index.wxml-->
+<!--scenic.wxml-->
 <view class="container">
   <view class="userinfo">
     <block wx:if="{{canIUseOpenData}}">

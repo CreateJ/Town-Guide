@@ -1,4 +1,31 @@
-<!--index.wxml-->
-<view class="container">
-  到访
+<!--scenic.wxml-->
+<view class="visit-container">
+  <navigation-bar default-data="{{defaultData}}" bind:switch="switchTo"></navigation-bar>
+  <div class="main-container">
+    <view class="scroll-wrap">
+      <view class="categories-list">
+        <view class="category-item" data-type="{{null}}"
+              bindtap="clickCategoryItem">
+          <image style="height: 100%; margin: 0 auto; width: 100%"
+                 src="{{activeCategory !== null ? allIcon : allActiveIcon}}"></image>
+        </view>
+        <view class="category-item" wx:for="{{categoryList}}" wx:key="index" data-type="{{item.id}}"
+              bindtap="clickCategoryItem">
+          <image class="category-icon" src="{{activeCategory !== item.id ? item.icon : item.iconActive}}"></image>
+          <view class="category-text"
+                style="color:{{activeCategory !== item.id ? '#aaa' : '#9EDFF2'}}">{{item.name}}</view>
+        </view>
+      </view>
+      <view class="point-list">
+        <view class="point-item" wx:for="{{scenicList}}" wx:key="index" data-point="{{item}}" bindtap="clickPointItem">
+          <image class="point-image" src="https://guide.time-traveler.cn/utils/getPic/{{item.pic_name}}"></image>
+          <view class="point-name">{{item.name}}</view>
+          <view class="point-location">{{item.location_desc}}</view>
+          <view class="point-category">{{item.category}}</view>
+          <image class="point-like" src="{{item.user_clock_state === 1 ? likeIcon : unLikeIcon}}"></image>
+        </view>
+      </view>
+    </view>
+  </div>
+
 </view>
