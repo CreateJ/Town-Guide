@@ -14,9 +14,9 @@
       :list-type="fileType === 'pic' ? 'picture-card' : 'text'"
     >
       <el-button size="small" type="primary">点击上传</el-button>
-      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+      <div slot="tip" class="el-upload__tip">视频可以上传mp4，音频可以上传mp3，图片支持png，jpg格式</div>
     </el-upload>
-<!--    <img v-for="item in fileNames" :key="item" :src="`https://guide.time-traveler.cn/utils/getPic/${item}`" alt="">-->
+    <!--    <img v-for="item in fileNames" :key="item" :src="`https://guide.time-traveler.cn/utils/getPic/${item}`" alt="">-->
   </div>
 </template>
 
@@ -53,9 +53,6 @@ export default {
       this.fileNames = val.map(item => item.name)
       console.log(this.fileNames)
     }
-  },
-  mounted() {
-
   },
   methods: {
     // 点击预览

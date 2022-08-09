@@ -1,0 +1,16 @@
+.map-container {
+  height: 100vh;
+  display: flex;
+  flex-flow: column nowrap;
+  overflow: hidden;
+}
+
+.map-box {
+  flex: 1;
+  overflow: hidden;
+}
+
+.map {
+  height: 100%;
+  width: 100%;
+}

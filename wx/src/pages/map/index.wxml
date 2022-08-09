@@ -1,4 +1,14 @@
-<!--index.wxml-->
-<view class="container">
-  地图
+<!--map-scenic.wxml-->
+<view class="map-container">
+  <navigation-bar bind:switch="switchTab" default-data="{{defaultData}}"></navigation-bar>
+  <view class="map-box">
+    <map
+      class="map"
+      name="map"
+      id="easyMap"
+      latitude="23.560987"
+      longitude="116.829499"
+    >
+    </map>
+  </view>
 </view>

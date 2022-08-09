@@ -1,4 +1,5 @@
-<!--index.wxml-->
-<view class="container">
-  我的
+<!--scenic.wxml-->
+<view class="mine-container" style="padding-top: {{navBarHeight}}px">
+  <view class="block-wrap" style="height: {{navBarHeight}}px"></view>
+  <view class="info"></view>
 </view>

@@ -4,7 +4,7 @@
   "description": "Town-Guide-miniprogram",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --watch",
+    "wx:dev": "webpack --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "wangchijie",

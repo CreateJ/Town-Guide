@@ -1,0 +1,12 @@
+.mine-container {
+  height: 100vh;
+  display: flex;
+  flex-flow: column nowrap;
+  overflow: hidden;
+}
+
+.block-wrap {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}

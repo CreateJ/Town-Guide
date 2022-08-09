@@ -15,13 +15,26 @@
         <el-input v-model="form.intro"/>
       </el-form-item>
       <el-form-item label="封面图">
-        <el-input v-model="form.pic_name"/>
+        <media-upload :file-list="picList" :limit="1" @file-list-change="picListChange"/>
       </el-form-item>
       <el-form-item label="图标">
         <el-input v-model="form.icon"/>
       </el-form-item>
       <el-form-item label="视频">
-        <el-input v-model="form.video_name"/>
+        <media-upload
+          :file-list="videoList"
+          file-type="media"
+          :limit="1"
+          @file-list-change="videoListChange"
+        />
+      </el-form-item>
+      <el-form-item label="音频">
+        <media-upload
+          :file-list="audioList"
+          file-type="media"
+          :limit="1"
+          @file-list-change="audioListChange"
+        />
       </el-form-item>
       <el-form-item label="标签">
         <el-input v-model="form.tag"/>
@@ -58,7 +71,7 @@ import api from '@/api'
 export default {
   name: 'ScenicAdd',
   components: { MediaUpload },
-  data () {
+  data() {
     return {
       form: {
         name: '',
@@ -75,10 +88,13 @@ export default {
         banner: ''
       },
       bannerList: [],
-      categoryOptions: []
+      categoryOptions: [],
+      picList: [],
+      videoList: [],
+      audioList: []
     }
   },
-  mounted () {
+  mounted() {
     if (this.$route.query.id) {
       this.form = this.$route.query
       if (this.form.banner.length) {
@@ -89,6 +105,23 @@ export default {
           }
         })
       }
+      if (this.form.pic_name.length) {
+        this.picList = this.form.pic_name.split('|').map(item => {
+          return {
+            name: item,
+            url: `https://guide.time-traveler.cn/utils/getPic/${item}`
+          }
+        })
+      }
+      if (this.form.audio_name.length) {
+        this.audioList = this.form.audio_name.split('|').map(item => {
+          return {
+            name: item,
+            url: `https://guide.time-traveler.cn/utils/getMedia/${item}`
+          }
+        })
+        console.log(this.audioList)
+      }
     }
     api.category.getCategoryList().then(res => {
       console.log(res)
@@ -97,7 +130,7 @@ export default {
     })
   },
   methods: {
-    onSubmit () {
+    onSubmit() {
       const submitApi = this.form.id ? api.scenic.editScenic : api.scenic.addScenic
       console.log(this.form)
       submitApi(this.form).then(res => {
@@ -105,8 +138,18 @@ export default {
         this.$router.go(-1)
       })
     },
-    bannerListChange (list) {
+    bannerListChange(list) {
       this.form.banner = list.join('|')
+    },
+    picListChange(list) {
+      this.form.pic_name = list.join('|')
+    },
+    videoListChange(list) {
+      console.log(list)
+    },
+    audioListChange(list) {
+      console.log(list)
+      this.form.audio_name = list.join('|')
     }
   }
 }
