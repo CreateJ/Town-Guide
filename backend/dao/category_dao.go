@@ -65,7 +65,7 @@ func (dao *CategoryDao) Edit(a *TbCategory) (id int64, err error) {
 	if a.ID <= 0 {
 		return 0, errors.New("id err")
 	}
-	sql := " update tb_category set "
+	sql := "UPDATE tb_category SET "
 	var params []interface{}
 	var sqls []string
 	if a.Name != "" {
@@ -84,7 +84,6 @@ func (dao *CategoryDao) Edit(a *TbCategory) (id int64, err error) {
 	strings.Join(sqls, ",")
 	sql += strings.Join(sqls, ",") + " where id=" + fmt.Sprintf("%d", a.ID)
 	rs, err := dao.runner.Exec(sql, params...)
-	fmt.Println(err)
 	if err != nil {
 		return 0, err
 	}

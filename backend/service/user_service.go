@@ -9,8 +9,7 @@ import (
 const SuccessCode = 2
 const ErrorCode = 1
 
-type UserServiceApi struct {
-}
+type UserServiceApi struct{}
 
 func NewUserService() *UserServiceApi {
 	return &UserServiceApi{}
@@ -22,11 +21,16 @@ type Response struct {
 	Data    interface{} `json:"data"`
 }
 
+type GetOpenIDDTO struct {
+	Code string `url:"code"`
+}
+
 func (u *UserServiceApi) GetUserInfo(ctx iris.Context) {
 	dto := GetOpenIDDTO{}
 	_ = ctx.ReadQuery(&dto)
 	if dto.Code == "" {
 		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
+		return
 	}
 
 	info := model.GetUserBaseInfo(dto.Code)
@@ -36,14 +40,6 @@ func (u *UserServiceApi) GetUserInfo(ctx iris.Context) {
 	}
 
 	_, _ = ctx.JSON(Response{SuccessCode, "", info})
-}
-
-type GetOpenIDDTO struct {
-	Code string `json:"code"`
-}
-
-type OpenIDDTO struct {
-	OpenID string `url:"open_id"`
 }
 
 func (u *UserServiceApi) Register(ctx iris.Context) {
@@ -76,7 +72,7 @@ func (u *UserServiceApi) GetUserDetail(ctx iris.Context) {
 
 func (u *UserServiceApi) UserClockByScenicID(ctx iris.Context) {
 	dto := model.UserActionDTO{}
-	ctx.ReadJSON(&dto)
+	_ = ctx.ReadJSON(&dto)
 	if dto.OpenID == "" || dto.ScenicID == 0 || dto.ActionState == 0 {
 		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
 		return
@@ -96,7 +92,7 @@ func (u *UserServiceApi) UserClockByScenicID(ctx iris.Context) {
 
 func (u *UserServiceApi) UserCollectionByScenicID(ctx iris.Context) {
 	dto := model.UserActionDTO{}
-	ctx.ReadJSON(&dto)
+	_ = ctx.ReadJSON(&dto)
 	if dto.OpenID == "" || dto.ScenicID == 0 || dto.ActionState == 0 {
 		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
 		return

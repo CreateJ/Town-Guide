@@ -40,25 +40,27 @@ func GetUserBaseInfo(code string) *UserBaseInfoDTO {
 	if err != nil {
 		return nil
 	}
+
 	body, _ := ioutil.ReadAll(resp.Body)
 	var res OpenIDResult
-	json.Unmarshal(body, &res)
+	_ = json.Unmarshal(body, &res)
 	if res.OpenID == "" {
 		return nil
 	}
-	userdao := dao.GetUserDao()
-	one := userdao.GetOne(res.OpenID)
+
+	userDao := dao.GetUserDao()
+	userInfo := userDao.GetOne(res.OpenID)
 	result := &UserBaseInfoDTO{
 		OpenID: res.OpenID,
 	}
-	if one == nil || one.NickName == "" {
+	if userInfo == nil || userInfo.NickName == "" {
 		return result
 	}
 
 	result.OpenID = res.OpenID
-	result.Gender = one.Gender
-	result.Avatar = one.Url
-	result.NickName = one.NickName
+	result.Gender = userInfo.Gender
+	result.Avatar = userInfo.Url
+	result.NickName = userInfo.NickName
 	return result
 }
 
@@ -66,6 +68,7 @@ func GetUserDetail(openID string) *UserInfoDTO {
 	if openID == "" {
 		return nil
 	}
+
 	userDao := dao.GetUserDao()
 	userBaseInfo := userDao.GetOne(openID)
 	result := &UserInfoDTO{
@@ -79,9 +82,8 @@ func GetUserDetail(openID string) *UserInfoDTO {
 	userClock := userActionDao.QueryUserClock(openID)
 	if userClock != nil && len(*userClock) > 0 {
 		clockList := make([]ScenicInfoDTO, 0, len(*userClock))
-
 		for _, v := range *userClock {
-			scenicInfo :=QueryScenicByID(v.ScenicID)
+			scenicInfo := QueryScenicByID(v.ScenicID)
 			if scenicInfo != nil {
 				clockList = append(clockList, *scenicInfo)
 			}
@@ -99,7 +101,6 @@ func GetUserDetail(openID string) *UserInfoDTO {
 			}
 			result.CollectionScenicInfo = &collectionList
 		}
-
 	}
 	return result
 }

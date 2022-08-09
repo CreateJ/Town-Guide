@@ -107,6 +107,14 @@ func QueryScenicByCategoryID(categoryID int64) *[]ScenicInfoDTO {
 	if scenicInfos == nil || len(*scenicInfos) <= 0 {
 		return nil
 	}
+	categoryDao := dao.GetCategoryDao()
+	allCategory := categoryDao.QueryOne(categoryID)
+	categoryID = int64(0)
+	category := "其他"
+	if allCategory != nil {
+		categoryID = allCategory.ID
+		category = allCategory.Name
+	}
 
 	result := make([]ScenicInfoDTO, 0, len(*scenicInfos))
 	for _, scenicInfo := range *scenicInfos {
@@ -122,11 +130,12 @@ func QueryScenicByCategoryID(categoryID int64) *[]ScenicInfoDTO {
 			Tag:          scenicInfo.Tag,
 			OpenTime:     scenicInfo.OpenTime,
 			ClockNum:     scenicInfo.ClockNum,
-			CategoryID:   scenicInfo.CategoryID,
+			CategoryID:   categoryID,
 			Banner:       scenicInfo.Banner,
 			Location:     scenicInfo.Location,
 			AudioName:    scenicInfo.AudioName,
 			ClockIcon:    scenicInfo.ClockIcon,
+			Category:     category,
 		}
 		result = append(result, temp)
 	}

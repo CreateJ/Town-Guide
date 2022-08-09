@@ -5,39 +5,37 @@ import (
 	"town-guide/model"
 )
 
-type CategoryServiceApi struct {
-}
+type CategoryServiceApi struct{}
 
 func NewCategoryService() *CategoryServiceApi {
 	return &CategoryServiceApi{}
 }
 
 func (u *CategoryServiceApi) GetAllCategory(ctx iris.Context) {
-
 	info := model.QueryAllCategory()
 	if info == nil {
-		ctx.JSON(Response{ErrorCode, "获取分类信息失败", nil})
+		_, _ = ctx.JSON(Response{ErrorCode, "获取分类信息失败", nil})
 		return
 	}
 
-	ctx.JSON(Response{SuccessCode, "", info})
+	_, _ = ctx.JSON(Response{SuccessCode, "", info})
 }
 
 func (u *CategoryServiceApi) AddCategory(ctx iris.Context) {
 	dto := model.CategoryInfoDTO{}
 	err := ctx.ReadJSON(&dto)
 	if err != nil {
-		ctx.JSON(Response{ErrorCode, err.Error(), nil})
+		_, _ = ctx.JSON(Response{ErrorCode, err.Error(), nil})
 		return
 	}
 
 	info, err := model.AddCategory(&dto)
 	if err != nil {
-		ctx.JSON(Response{ErrorCode, err.Error(), nil})
+		_, _ = ctx.JSON(Response{ErrorCode, err.Error(), nil})
 		return
 	}
 
-	ctx.JSON(Response{SuccessCode, "", info})
+	_, _ = ctx.JSON(Response{SuccessCode, "", info})
 }
 
 func (u *CategoryServiceApi) DeleteCategory(ctx iris.Context) {
@@ -57,16 +55,16 @@ func (u *CategoryServiceApi) DeleteCategory(ctx iris.Context) {
 
 func (u *CategoryServiceApi) EditCategory(ctx iris.Context) {
 	dto := model.CategoryInfoDTO{}
-	ctx.ReadJSON(&dto)
+	_ = ctx.ReadJSON(&dto)
 	if dto.ID <= 0 {
 		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
 		return
 	}
 	err := model.EditCategory(&dto)
 	if err != nil {
-		ctx.JSON(Response{ErrorCode, "修改失败", nil})
+		_, _ = ctx.JSON(Response{ErrorCode, "修改失败", nil})
 		return
 	}
 
-	ctx.JSON(Response{SuccessCode, "", nil})
+	_, _ = ctx.JSON(Response{SuccessCode, "", nil})
 }
