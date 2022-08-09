@@ -1,8 +1,11 @@
 package service
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"image"
+	"image/jpeg"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -53,8 +56,16 @@ func (u *UtilServiceApi) UploadFile(ctx iris.Context) {
 	_, _ = ctx.JSON(Response{SuccessCode, "", map[string]string{"file_name": filename}})
 }
 
+type PicQuery struct {
+	Quality int `url:"quality"`
+}
+
+
 func (u *UtilServiceApi) GetPic(ctx iris.Context) {
 	picName := ctx.Params().Get("pic_name")
+	picQuery :=  PicQuery{}
+	ctx.ReadQuery(&picQuery)
+
 	if picName == "" {
 		return
 	}
@@ -64,7 +75,7 @@ func (u *UtilServiceApi) GetPic(ctx iris.Context) {
 	if err != nil {
 		return
 	}
-	_, _ = ctx.Write(file)
+	_, _ = ctx.Write(compressImageResource(file, picQuery.Quality))
 }
 
 func (c *UtilServiceApi) GetMedia(ctx iris.Context) {
@@ -147,4 +158,20 @@ func (c *UtilServiceApi) GetWeather(ctx iris.Context) {
 	res.Now.Text = text
 	res.Now.Icon = res.Now.Icon + ".svg"
 	_, _ = ctx.JSON(Response{SuccessCode, "", res.Now})
+}
+
+func compressImageResource(data []byte, quality int) []byte {
+	img, _, err := image.Decode(bytes.NewReader(data))
+	if err != nil {
+		return data
+	}
+	buf := bytes.Buffer{}
+	err = jpeg.Encode(&buf, img, &jpeg.Options{Quality: quality})
+	if err != nil {
+		return data
+	}
+	if buf.Len() > len(data) {
+		return data
+	}
+	return buf.Bytes()
 }

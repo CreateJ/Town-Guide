@@ -16,8 +16,8 @@ type TbUserScenicCollection struct {
 
 type TbUserScenicClock struct {
 	ID         int64  `db:"id,omitempty"`
-	OpenID     string `db:"open_id"`
-	ScenicID   int64  `db:"scenic_id"`
+	OpenID     string `db:"open_id,unique"`
+	ScenicID   int64  `db:"scenic_id,unique"`
 	UpdateTime int64  `db:"update_time"`
 	CreateTime int64  `db:"create_time"`
 }
@@ -35,6 +35,8 @@ func GetUserActionDao() UserActionDao {
 func (dao *UserActionDao) GetUserCollectionState(openID string, scenicID int64) bool {
 	a := &TbUserScenicCollection{OpenID: openID, ScenicID: scenicID}
 	ok, err := dao.runner.GetOne(a)
+	fmt.Println(err)
+
 	if err != nil || !ok {
 		return false
 	}
@@ -44,6 +46,7 @@ func (dao *UserActionDao) GetUserCollectionState(openID string, scenicID int64) 
 func (dao *UserActionDao) GetUserClockState(openID string, scenicID int64) bool {
 	a := &TbUserScenicClock{OpenID: openID, ScenicID: scenicID}
 	ok, err := dao.runner.GetOne(a)
+	fmt.Println(err)
 	if err != nil || !ok {
 		return false
 	}
@@ -88,8 +91,8 @@ func (dao *UserActionDao) QueryUserCollection(openID string) *[]TbUserScenicColl
 
 func (dao *UserActionDao) QueryUserScenicCollection(openID string, scenicID int64) *TbUserScenicCollection {
 	query := &TbUserScenicCollection{OpenID: openID, ScenicID: scenicID}
-	_, err := dao.runner.GetOne(query)
-	if err != nil {
+	ok, err := dao.runner.GetOne(query)
+	if err != nil || !ok {
 		return nil
 	}
 	return query
@@ -97,8 +100,8 @@ func (dao *UserActionDao) QueryUserScenicCollection(openID string, scenicID int6
 
 func (dao *UserActionDao) QueryUserScenicClock(openID string, scenicID int64) *TbUserScenicClock {
 	query := &TbUserScenicClock{OpenID: openID, ScenicID: scenicID}
-	_, err := dao.runner.GetOne(query)
-	if err != nil {
+	ok, err := dao.runner.GetOne(query)
+	if err != nil || !ok {
 		return nil
 	}
 	return query

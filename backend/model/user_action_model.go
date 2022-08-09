@@ -20,6 +20,15 @@ func GetUserClockState(openID string, scenicID int64) bool {
 	return true
 }
 
+func GetUserCollectionState(openID string, scenicID int64) bool {
+	actionDao := dao.GetUserActionDao()
+	collection := actionDao.QueryUserScenicCollection(openID, scenicID)
+	if collection == nil {
+		return false
+	}
+	return true
+}
+
 func UserClock(openID string, scenicID int64) bool {
 	actionDao := dao.GetUserActionDao()
 	clock := actionDao.QueryUserScenicClock(openID, scenicID)

@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"github.com/kataras/iris/v12"
 	"town-guide/model"
 )
@@ -16,7 +15,6 @@ func NewScenicService() *ScenicServiceApi {
 func (u *ScenicServiceApi) GetScenic(ctx iris.Context) {
 	scenicID, err := ctx.Params().GetInt64("scenic_id")
 	dto := OpenIDDTO{}
-
 	_ = ctx.ReadQuery(&dto)
 	if err != nil || scenicID <= 0 {
 		ctx.JSON(Response{ErrorCode, "参数错误", nil})
@@ -33,6 +31,9 @@ func (u *ScenicServiceApi) GetScenic(ctx iris.Context) {
 		info.UserClockState = 2
 	}
 
+	if dto.OpenID != "" && model.GetUserCollectionState(dto.OpenID, scenicID) {
+		info.UserCollectionState = 2
+	}
 	ctx.JSON(Response{SuccessCode, "", info})
 }
 
@@ -75,7 +76,6 @@ func (u *ScenicServiceApi) EditScenic(ctx iris.Context) {
 		_, _ = ctx.JSON(Response{ErrorCode, "参数错误", nil})
 		return
 	}
-	fmt.Println(dto)
 	err := model.EditScenic(&dto)
 	if err != nil {
 		ctx.JSON(Response{ErrorCode, "修改失败", nil})
@@ -87,7 +87,21 @@ func (u *ScenicServiceApi) EditScenic(ctx iris.Context) {
 
 func (u *ScenicServiceApi) GetAllScenic(ctx iris.Context) {
 	info := model.QueryAllScenic()
-	_, _ = ctx.JSON(Response{SuccessCode, "", info})
+	dto := OpenIDDTO{}
+	var result []model.ScenicInfoDTO
+	_ = ctx.ReadQuery(&dto)
+	for _, v := range *info {
+		temp := v
+		if dto.OpenID != "" && model.GetUserClockState(dto.OpenID, temp.ID) {
+			temp.UserClockState = 2
+		}
+		if dto.OpenID != "" && model.GetUserCollectionState(dto.OpenID, temp.ID) {
+			temp.UserCollectionState = 2
+		}
+		result = append(result, temp)
+	}
+
+	_, _ = ctx.JSON(Response{SuccessCode, "", result})
 }
 
 func (u *ScenicServiceApi) GetScenicByCategoryID(ctx iris.Context) {

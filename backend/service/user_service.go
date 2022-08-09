@@ -43,7 +43,7 @@ type GetOpenIDDTO struct {
 }
 
 type OpenIDDTO struct {
-	OpenID string `json:"open_id"`
+	OpenID string `url:"open_id"`
 }
 
 func (u *UserServiceApi) Register(ctx iris.Context) {
