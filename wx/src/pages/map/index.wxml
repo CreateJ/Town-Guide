@@ -11,6 +11,7 @@
       bindmarkertap="clickMarkers"
       bindcallouttap="clickCallOut"
       bindlabeltap="clickLabel"
+      subkey="TIXBZ-GXWL2-Y32UQ-C3I4U-ZCA7Q-SBFJ3"
       markers="{{markers}}"
     >
 <!--      <cover-view slot="callout">-->
