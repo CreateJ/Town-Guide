@@ -29,25 +29,10 @@ type ScenicInfoDTO struct {
 }
 
 func AddScenic(scenicInfo *ScenicInfoDTO) (*ScenicInfoDTO, error) {
-	info := &dao.TbScenicInfo{
-		Name:         scenicInfo.Name,
-		LocationDesc: scenicInfo.LocationDesc,
-		Description:  scenicInfo.Description,
-		Intro:        scenicInfo.Intro,
-		PicName:      scenicInfo.PicName,
-		Icon:         scenicInfo.Icon,
-		VideoName:    scenicInfo.VideoName,
-		Tag:          scenicInfo.Tag,
-		OpenTime:     scenicInfo.OpenTime,
-		CategoryID:   scenicInfo.CategoryID,
-		CreateTime:   time.Now().Unix(),
-		UpdateTime:   time.Now().Unix(),
-		Banner:       scenicInfo.Banner,
-		Location:     scenicInfo.Location,
-		AudioName:    scenicInfo.AudioName,
-		ClockIcon:    scenicInfo.ClockIcon,
-	}
-
+	info := ScenicInfoDTOToTbScenicInfo(scenicInfo)
+	info.ID = 0
+	info.CreateTime = time.Now().Unix()
+	info.UpdateTime = time.Now().Unix()
 	scenicDao := dao.GetScenicDao()
 	id, err := scenicDao.Insert(info)
 	if err != nil {
@@ -77,26 +62,10 @@ func QueryAllScenic() *[]ScenicInfoDTO {
 			categoryID = 0
 			category = "其他"
 		}
-		temp := ScenicInfoDTO{
-			ID:           scenicInfo.ID,
-			Name:         scenicInfo.Name,
-			LocationDesc: scenicInfo.LocationDesc,
-			Description:  scenicInfo.Description,
-			Intro:        scenicInfo.Intro,
-			PicName:      scenicInfo.PicName,
-			Icon:         scenicInfo.Icon,
-			VideoName:    scenicInfo.VideoName,
-			Tag:          scenicInfo.Tag,
-			OpenTime:     scenicInfo.OpenTime,
-			ClockNum:     scenicInfo.ClockNum,
-			CategoryID:   categoryID,
-			Banner:       scenicInfo.Banner,
-			Category:     category,
-			Location:     scenicInfo.Location,
-			AudioName:    scenicInfo.AudioName,
-			ClockIcon:    scenicInfo.ClockIcon,
-		}
-		result = append(result, temp)
+		temp := TbScenicInfoToScenicInfoDTO(&scenicInfo)
+		temp.Category = category
+		temp.CategoryID = categoryID
+		result = append(result, *temp)
 	}
 	return &result
 }
@@ -118,26 +87,10 @@ func QueryScenicByCategoryID(categoryID int64) *[]ScenicInfoDTO {
 
 	result := make([]ScenicInfoDTO, 0, len(*scenicInfos))
 	for _, scenicInfo := range *scenicInfos {
-		temp := ScenicInfoDTO{
-			ID:           scenicInfo.ID,
-			Name:         scenicInfo.Name,
-			LocationDesc: scenicInfo.LocationDesc,
-			Description:  scenicInfo.Description,
-			Intro:        scenicInfo.Intro,
-			PicName:      scenicInfo.PicName,
-			Icon:         scenicInfo.Icon,
-			VideoName:    scenicInfo.VideoName,
-			Tag:          scenicInfo.Tag,
-			OpenTime:     scenicInfo.OpenTime,
-			ClockNum:     scenicInfo.ClockNum,
-			CategoryID:   categoryID,
-			Banner:       scenicInfo.Banner,
-			Location:     scenicInfo.Location,
-			AudioName:    scenicInfo.AudioName,
-			ClockIcon:    scenicInfo.ClockIcon,
-			Category:     category,
-		}
-		result = append(result, temp)
+		temp := TbScenicInfoToScenicInfoDTO(&scenicInfo)
+		temp.Category = category
+		temp.CategoryID = categoryID
+		result = append(result, *temp)
 	}
 	return &result
 }
@@ -161,25 +114,10 @@ func QueryScenicByID(id int64) *ScenicInfoDTO {
 		categoryID = scenicInfo.CategoryID
 		category = allCategory.Name
 	}
-	return &ScenicInfoDTO{
-		ID:           scenicInfo.ID,
-		Name:         scenicInfo.Name,
-		LocationDesc: scenicInfo.LocationDesc,
-		Description:  scenicInfo.Description,
-		Intro:        scenicInfo.Intro,
-		PicName:      scenicInfo.PicName,
-		Icon:         scenicInfo.Icon,
-		VideoName:    scenicInfo.VideoName,
-		Tag:          scenicInfo.Tag,
-		OpenTime:     scenicInfo.OpenTime,
-		ClockNum:     scenicInfo.ClockNum,
-		CategoryID:   categoryID,
-		Banner:       scenicInfo.Banner,
-		Category:     category,
-		Location:     scenicInfo.Location,
-		AudioName:    scenicInfo.AudioName,
-		ClockIcon:    scenicInfo.ClockIcon,
-	}
+	result := TbScenicInfoToScenicInfoDTO(scenicInfo)
+	result.Category = category
+	result.CategoryID = categoryID
+	return result
 }
 
 func DeleteScenicByID(id int64) error {
@@ -197,23 +135,7 @@ func EditScenic(scenicInfo *ScenicInfoDTO) error {
 	}
 
 	scenicDao := dao.GetScenicDao()
-	info := &dao.TbScenicInfo{
-		ID:           scenicInfo.ID,
-		Name:         scenicInfo.Name,
-		LocationDesc: scenicInfo.LocationDesc,
-		Description:  scenicInfo.Description,
-		Intro:        scenicInfo.Intro,
-		PicName:      scenicInfo.PicName,
-		Icon:         scenicInfo.Icon,
-		VideoName:    scenicInfo.VideoName,
-		Tag:          scenicInfo.Tag,
-		OpenTime:     scenicInfo.OpenTime,
-		Banner:       scenicInfo.Banner,
-		CategoryID:   scenicInfo.CategoryID,
-		Location:     scenicInfo.Location,
-		AudioName:    scenicInfo.AudioName,
-		ClockIcon:    scenicInfo.ClockIcon,
-	}
+	info := ScenicInfoDTOToTbScenicInfo(scenicInfo)
 	_, err := scenicDao.Edit(info)
 	if err != nil {
 		return err
@@ -232,4 +154,45 @@ func AddScenicClockNumByID(id int64) error {
 		return err
 	}
 	return nil
+}
+
+func ScenicInfoDTOToTbScenicInfo(scenicInfo *ScenicInfoDTO) *dao.TbScenicInfo {
+	return &dao.TbScenicInfo{
+		ID:           scenicInfo.ID,
+		Name:         scenicInfo.Name,
+		LocationDesc: scenicInfo.LocationDesc,
+		Description:  scenicInfo.Description,
+		Intro:        scenicInfo.Intro,
+		PicName:      scenicInfo.PicName,
+		Icon:         scenicInfo.Icon,
+		VideoName:    scenicInfo.VideoName,
+		Tag:          scenicInfo.Tag,
+		OpenTime:     scenicInfo.OpenTime,
+		Banner:       scenicInfo.Banner,
+		CategoryID:   scenicInfo.CategoryID,
+		Location:     scenicInfo.Location,
+		AudioName:    scenicInfo.AudioName,
+		ClockIcon:    scenicInfo.ClockIcon,
+	}
+}
+
+func TbScenicInfoToScenicInfoDTO(scenicInfo *dao.TbScenicInfo) *ScenicInfoDTO {
+	return &ScenicInfoDTO{
+		ID:           scenicInfo.ID,
+		Name:         scenicInfo.Name,
+		LocationDesc: scenicInfo.LocationDesc,
+		Description:  scenicInfo.Description,
+		Intro:        scenicInfo.Intro,
+		PicName:      scenicInfo.PicName,
+		Icon:         scenicInfo.Icon,
+		VideoName:    scenicInfo.VideoName,
+		Tag:          scenicInfo.Tag,
+		OpenTime:     scenicInfo.OpenTime,
+		ClockNum:     scenicInfo.ClockNum,
+		CategoryID:   scenicInfo.CategoryID,
+		Banner:       scenicInfo.Banner,
+		Location:     scenicInfo.Location,
+		AudioName:    scenicInfo.AudioName,
+		ClockIcon:    scenicInfo.ClockIcon,
+	}
 }

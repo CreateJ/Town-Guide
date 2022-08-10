@@ -10,7 +10,7 @@ import (
 )
 
 type TbScenicInfo struct {
-	ID           int64  `db:"id,omitempty"`
+	ID           int64  `db:"id,omitempty,unique"`
 	Name         string `db:"name"`
 	LocationDesc string `db:"location_desc"`
 	Description  string `db:"description"`
@@ -44,6 +44,7 @@ func (dao *ScenicDao) QueryAll() *[]TbScenicInfo {
 	var dst []TbScenicInfo
 	err := dao.runner.Find(&dst, "SELECT * FROM tb_scenic_info ")
 	if err != nil {
+		fmt.Println("Scenic DeleteOne:", err)
 		return nil
 	}
 	return &dst
@@ -53,6 +54,7 @@ func (dao *ScenicDao) QueryByCategoryID(scenicID int64) *[]TbScenicInfo {
 	var dst []TbScenicInfo
 	err := dao.runner.Find(&dst, "SELECT * FROM tb_scenic_info WHERE Category_id="+fmt.Sprintf("%d", scenicID))
 	if err != nil {
+		fmt.Println("Scenic QueryByCategoryID:", err)
 		return nil
 	}
 	return &dst
@@ -62,6 +64,7 @@ func (dao *ScenicDao) QueryOne(id int64) *TbScenicInfo {
 	a := &TbScenicInfo{ID: id}
 	ok, err := dao.runner.GetOne(a)
 	if err != nil || !ok {
+		fmt.Println("Scenic QueryOne:", err)
 		return nil
 	}
 	return a
@@ -71,6 +74,7 @@ func (dao *ScenicDao) DeleteOne(id int64) error {
 	sql := "DELETE FROM tb_scenic_info WHERE id=" + fmt.Sprintf("%d", id)
 	_, err := dao.runner.Exec(sql)
 	if err != nil {
+		fmt.Println("Scenic DeleteOne:", err)
 		return err
 	}
 	return nil
@@ -80,6 +84,7 @@ func (dao *ScenicDao) DeleteOne(id int64) error {
 func (dao *ScenicDao) Insert(a *TbScenicInfo) (id int64, err error) {
 	rs, err := dao.runner.Insert(a)
 	if err != nil {
+		fmt.Println("Scenic Insert:", err)
 		return 0, err
 	}
 	return rs.LastInsertId()
@@ -160,9 +165,9 @@ func (dao *ScenicDao) Edit(a *TbScenicInfo) (id int64, err error) {
 	}
 
 	sql += " where id=" + fmt.Sprintf("%d", a.ID)
-	fmt.Println(sql)
 	rs, err := dao.runner.Exec(sql, params...)
 	if err != nil {
+		fmt.Println("Scenic Edit:", err)
 		return 0, err
 	}
 	return rs.RowsAffected()
@@ -184,6 +189,9 @@ func (dao *ScenicDao) UpdateScenicCategoryID(scenicIds []int64, categoryID int64
 
 	sql += " where id in " + result
 	_, err = dao.runner.Exec(sql)
+	if err != nil {
+		fmt.Println("Scenic UpdateScenicCategoryID:", err)
+	}
 	return err
 }
 
@@ -195,6 +203,7 @@ func (dao *ScenicDao) IncrClockNum(id int64) (num int64, err error) {
 		" where id=" + fmt.Sprintf("%d", id)
 	rs, err := dao.runner.Exec(sql)
 	if err != nil {
+		fmt.Println("Scenic IncrClockNum:", err)
 		return 0, err
 	}
 	return rs.RowsAffected()

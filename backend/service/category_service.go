@@ -13,11 +13,6 @@ func NewCategoryService() *CategoryServiceApi {
 
 func (u *CategoryServiceApi) GetAllCategory(ctx iris.Context) {
 	info := model.QueryAllCategory()
-	if info == nil {
-		_, _ = ctx.JSON(Response{ErrorCode, "获取分类信息失败", nil})
-		return
-	}
-
 	_, _ = ctx.JSON(Response{SuccessCode, "", info})
 }
 

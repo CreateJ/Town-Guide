@@ -7,7 +7,7 @@ import (
 )
 
 type TbUserInfo struct {
-	Id         int64  `db:"id,omitempty"`
+	Id         int64  `db:"id,omitempty,unique"`
 	OpenID     string `db:"open_id,unique"`
 	NickName   string `db:"nick_name"`
 	Url        string `db:"url"`
@@ -27,14 +27,8 @@ func GetUserDao() userDao {
 func (dao *userDao) GetOne(openID string) *TbUserInfo {
 	a := &TbUserInfo{OpenID: openID}
 	ok, err := dao.runner.GetOne(a)
-	fmt.Println(*a)
-	fmt.Print(ok)
-	fmt.Print(err)
-
-	if err != nil {
-		return nil
-	}
-	if !ok {
+	if err != nil || !ok {
+		fmt.Println("User GetOne:", err)
 		return nil
 	}
 	return a
@@ -43,6 +37,7 @@ func (dao *userDao) GetOne(openID string) *TbUserInfo {
 func (dao *userDao) Insert(a *TbUserInfo) (id int64, err error) {
 	rs, err := dao.runner.Insert(a)
 	if err != nil {
+		fmt.Println("User Insert:", err)
 		return 0, err
 	}
 	return rs.LastInsertId()

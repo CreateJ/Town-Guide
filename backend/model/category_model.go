@@ -13,11 +13,8 @@ type CategoryInfoDTO struct {
 }
 
 func AddCategory(categoryInfo *CategoryInfoDTO) (*CategoryInfoDTO, error) {
-	info := &dao.TbCategory{
-		Name:       categoryInfo.Name,
-		Icon:       categoryInfo.Icon,
-		IconActive: categoryInfo.IconActive,
-	}
+	info := CategoryInfoDTOToTbCategory(categoryInfo)
+	info.ID = 0
 	categoryDao := dao.GetCategoryDao()
 	id, err := categoryDao.Insert(info)
 	if err != nil {
@@ -36,13 +33,8 @@ func QueryAllCategory() *[]CategoryInfoDTO {
 
 	result := make([]CategoryInfoDTO, 0, len(*categoryInfos))
 	for _, info := range *categoryInfos {
-		temp := CategoryInfoDTO{
-			ID:         info.ID,
-			Name:       info.Name,
-			Icon:       info.Icon,
-			IconActive: info.IconActive,
-		}
-		result = append(result, temp)
+		temp := TbCategoryToCategoryInfoDTO(&info)
+		result = append(result, *temp)
 	}
 	return &result
 }
@@ -57,13 +49,7 @@ func QueryCategoryByID(id int64) *CategoryInfoDTO {
 	if info == nil {
 		return nil
 	}
-
-	return &CategoryInfoDTO{
-		ID:         info.ID,
-		Name:       info.Name,
-		Icon:       info.Icon,
-		IconActive: info.IconActive,
-	}
+	return TbCategoryToCategoryInfoDTO(info)
 }
 
 func DeleteCategoryByID(id int64) error {
@@ -80,15 +66,27 @@ func EditCategory(categoryInfo *CategoryInfoDTO) error {
 	}
 
 	categoryDao := dao.GetCategoryDao()
-	info := &dao.TbCategory{
+	info := CategoryInfoDTOToTbCategory(categoryInfo)
+	if _, err := categoryDao.Edit(info); err != nil {
+		return err
+	}
+	return nil
+}
+
+func CategoryInfoDTOToTbCategory(categoryInfo *CategoryInfoDTO) *dao.TbCategory {
+	return &dao.TbCategory{
 		ID:         categoryInfo.ID,
 		Name:       categoryInfo.Name,
 		Icon:       categoryInfo.Icon,
 		IconActive: categoryInfo.IconActive,
 	}
-	_, err := categoryDao.Edit(info)
-	if err != nil {
-		return err
+}
+
+func TbCategoryToCategoryInfoDTO(categoryInfo *dao.TbCategory) *CategoryInfoDTO {
+	return &CategoryInfoDTO{
+		ID:         categoryInfo.ID,
+		Name:       categoryInfo.Name,
+		Icon:       categoryInfo.Icon,
+		IconActive: categoryInfo.IconActive,
 	}
-	return nil
 }
