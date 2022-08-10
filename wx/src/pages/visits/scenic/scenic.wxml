@@ -1,7 +1,7 @@
 <!--scenic.wxml-->
 <view class="scenic-container" style="padding-top: {{navBarHeight}}px">
   <view class="back-button-box" style="height: {{navBarHeight}}px">
-    <image class="back-button" src="../../../assets/image/back.png" bindtap="goBack"></image>
+    <image class="back-button" src="/assets/image/back.png" bindtap="goBack"></image>
   </view>
   <swiper
     style="height: 200px"
@@ -21,18 +21,21 @@
     <view class="scenic-name">{{scenicData.name}}</view>
     <view class="scenic-tag">{{scenicData.tag}}</view>
     <view class="card-info">
-      <image class="card-icon" src="../../../assets/image/scenic/gps.png"></image>
+      <image class="card-icon" src="/assets/image/scenic/gps.png"></image>
       <view class="card-text">{{scenicData.location_desc}}</view>
-      <image class="card-icon" src="../../../assets/image/scenic/goto.png"></image>
+      <image class="card-icon" src="/assets/image/scenic/goto.png"></image>
     </view>
     <view class="card-info">
-      <image class="card-icon" src="../../../assets/image/scenic/time.png"></image>
+      <image class="card-icon" src="/assets/image/scenic/time.png"></image>
       <view class="card-text">{{scenicData.open_time}}</view>
     </view>
     <view class="card-info">
-      <image class="card-icon" src="../../../assets/image/scenic/walker.png"></image>
+      <image class="card-icon" src="/assets/image/scenic/walker.png"></image>
       <view class="card-text">{{scenicData.clock_num}}人已打卡</view>
-      <view class="card-button">我要打卡</view>
+      <image wx:if="{{scenicData.user_clock_state === 2}}"
+             src="{{globalUrl}}/utils/getPic/{{scenicData.clock_icon}}"
+             class="card-clock-icon"></image>
+      <view wx:else class="card-button" bindtap="handleClock">我要打卡</view>
     </view>
     <view class="scenic-history">
       <view class="info-title">历史上的这里</view>
@@ -42,10 +45,10 @@
       <view class="info-title">听听这里的故事</view>
       <audio
         class="info-audio"
-        poster="https://guide.time-traveler.cn/utils/getPic/{{scenicData.pic_name}}"
+        poster="{{globalUrl}}/utils/getPic/{{scenicData.pic_name}}"
         name="{{scenicData.name}}"
         author="东里义教"
-        src="https://guide.time-traveler.cn/utils/getMedia/{{scenicData.audio_name}}" id="myAudio"
+        src="{{globalUrl}}/utils/getMedia/{{scenicData.audio_name}}" id="myAudio"
         controls
         loop>
       </audio>

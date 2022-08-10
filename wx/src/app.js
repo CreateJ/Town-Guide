@@ -1,4 +1,5 @@
 // app.js
+const globalUrl = 'https://guide.time-traveler.cn:4443'
 App({
   onLaunch () {
     const that = this
@@ -14,10 +15,9 @@ App({
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
 
         wx.request({
-          url: `https://guide.time-traveler.cn/user/getUserInfo?code=${res.code}`,
+          url: `${globalUrl}/user/getUserInfo?code=${res.code}`,
           method: 'GET',
           success: (userInfo) => {
-            console.log(userInfo.data.data)
             const newUserInfo = userInfo.data.data
             wx.setStorage({
               key: 'openId',
@@ -29,30 +29,20 @@ App({
                 key: 'isLogin',
                 data: true
               })
+              that.globalData.userInfo = newUserInfo
             } else {
               wx.setStorage({
                 key: 'isLogin',
                 data: false
               })
             }
-
           }
         })
-
       },
       fail: err => {
         console.log(err)
       }
     })
-
-    // wx.request({
-    //   url: 'https://guide.time-traveler.cn/category/getAll',
-    //   method:'GET',
-    //   success(res) {
-    //     console.log(res.data)
-    //     that.globalData.categoriesList = res.data.data
-    //   }
-    // })
 
     const systemInfo = wx.getSystemInfoSync();
     // 胶囊按钮位置信息
@@ -63,6 +53,7 @@ App({
     that.globalData.menuTop = menuButtonInfo.top;
     that.globalData.menuHeight = menuButtonInfo.height;
   },
+  globalUrl,
   globalData: {
     userInfo: null,
     navBarHeight: 0, // 导航栏高度

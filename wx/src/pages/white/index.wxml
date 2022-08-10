@@ -1,0 +1,6 @@
+<view class="white-container" style="padding-top: {{navBarHeight}}px">
+  <view class="back-button-box" style="height: {{navBarHeight}}px">
+    <image class="back-button" src="/assets/image/back.png" bindtap="goBack"></image>
+  </view>
+  <view class="no-page">暂无页面</view>
+</view>

@@ -2,9 +2,11 @@
   "pages":[
     "pages/map/index",
     "pages/index/index",
+    "pages/white/index",
     "pages/visits/index",
     "pages/visits/scenic/scenic",
     "pages/mine/index",
+    "pages/mine/clock/clock",
     "pages/logs/logs"
   ],
   "window":{

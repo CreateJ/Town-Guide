@@ -64,7 +64,7 @@ export default {
       this.fileNames = this.fileNames.filter(item => fileObj.name !== item)
     },
     handleExceed(...params) {
-      this.$message.info('只能上传5张图片哦！')
+      this.$message.info(`只能上传${this.limit}张图片哦！`)
     },
     handleChange(...params) {
       console.log(params)

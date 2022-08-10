@@ -8,23 +8,29 @@
       <el-form-item label="地点">
         <el-input v-model="form.location_desc"/>
       </el-form-item>
+      <el-form-item label="坐标">
+        <el-input v-model="form.location"/>
+      </el-form-item>
       <el-form-item label="描述">
-        <el-input v-model="form.description"/>
+        <el-input v-model="form.description" type="textarea" :autosize="{ minRows: 4, maxRows: 8}"/>
       </el-form-item>
       <el-form-item label="简介">
-        <el-input v-model="form.intro"/>
+        <el-input v-model="form.intro" type="textarea" :autosize="{ minRows: 4, maxRows: 8}"/>
       </el-form-item>
-      <el-form-item label="封面图">
+      <el-form-item label="详情图片">
         <media-upload :file-list="picList" :limit="1" @file-list-change="picListChange"/>
       </el-form-item>
-      <el-form-item label="图标">
-        <el-input v-model="form.icon"/>
+      <el-form-item label="封面图">
+        <media-upload :file-list="iconList" :limit="1" @file-list-change="iconListChange"/>
+      </el-form-item>
+      <el-form-item label="印章">
+        <media-upload :file-list="clockIconList" :limit="1" @file-list-change="clockIconListChange"/>
       </el-form-item>
       <el-form-item label="视频">
         <media-upload
           :file-list="videoList"
           file-type="media"
-          :limit="1"
+          :limit="5"
           @file-list-change="videoListChange"
         />
       </el-form-item>
@@ -32,7 +38,7 @@
         <media-upload
           :file-list="audioList"
           file-type="media"
-          :limit="1"
+          :limit="5"
           @file-list-change="audioListChange"
         />
       </el-form-item>
@@ -43,7 +49,6 @@
         <el-input v-model="form.open_time"/>
       </el-form-item>
       <el-form-item label="轮播图">
-        <!--        <el-input v-model="form.banner"/>-->
         <media-upload :file-list="bannerList" :limit="5" @file-list-change="bannerListChange"/>
       </el-form-item>
       <el-form-item label="分类id">
@@ -75,6 +80,7 @@ export default {
     return {
       form: {
         name: '',
+        location: '',
         location_desc: '',
         description: '',
         intro: '',
@@ -83,15 +89,18 @@ export default {
         video_name: '',
         tag: '',
         open_time: '',
-        check_num: 0, // 打卡数量
+        clock_num: 0, // 打卡数量
         category_id: 0,
-        banner: ''
+        banner: '',
+        clock_icon: ''
       },
       bannerList: [],
       categoryOptions: [],
       picList: [],
+      iconList: [],
       videoList: [],
-      audioList: []
+      audioList: [],
+      clockIconList: []
     }
   },
   mounted() {
@@ -101,7 +110,7 @@ export default {
         this.bannerList = this.form.banner.split('|').map(item => {
           return {
             name: item,
-            url: `https://guide.time-traveler.cn/utils/getPic/${item}`
+            url: `https://guide.time-traveler.cn:4443/utils/getPic/${item}`
           }
         })
       }
@@ -109,18 +118,27 @@ export default {
         this.picList = this.form.pic_name.split('|').map(item => {
           return {
             name: item,
-            url: `https://guide.time-traveler.cn/utils/getPic/${item}`
+            url: `https://guide.time-traveler.cn:4443/utils/getPic/${item}`
           }
         })
       }
-      if (this.form.audio_name.length) {
-        this.audioList = this.form.audio_name.split('|').map(item => {
+      if (this.form.icon.length) {
+        this.iconList = this.form.icon.split('|').map(item => {
           return {
             name: item,
-            url: `https://guide.time-traveler.cn/utils/getMedia/${item}`
+            url: `https://guide.time-traveler.cn:4443/utils/getPic/${item}`
           }
         })
-        console.log(this.audioList)
+      }
+
+      if (this.form.clock_icon.length) {
+        this.clockIconList = this.form.clock_icon.split('|').map(item => {
+          return {
+            name: item,
+            url: `https://guide.time-traveler.cn:4443/utils/getPic/${item}`
+          }
+        })
+        console.log(this.clockIconList)
       }
     }
     api.category.getCategoryList().then(res => {
@@ -144,12 +162,19 @@ export default {
     picListChange(list) {
       this.form.pic_name = list.join('|')
     },
+    iconListChange(list) {
+      this.form.icon = list.join('|')
+    },
     videoListChange(list) {
       console.log(list)
     },
     audioListChange(list) {
       console.log(list)
       this.form.audio_name = list.join('|')
+    },
+    clockIconListChange(list) {
+      console.log(list)
+      this.form.clock_icon = list.join('|')
     }
   }
 }

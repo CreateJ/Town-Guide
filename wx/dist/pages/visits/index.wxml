@@ -18,11 +18,16 @@
       </view>
       <view class="point-list">
         <view class="point-item" wx:for="{{scenicList}}" wx:key="index" data-point="{{item}}" bindtap="clickPointItem">
-          <image class="point-image" src="https://guide.time-traveler.cn/utils/getPic/{{item.pic_name}}"></image>
+          <image class="point-image" src="{{globalUrl}}/utils/getPic/{{item.pic_name}}"></image>
           <view class="point-name">{{item.name}}</view>
           <view class="point-location">{{item.location_desc}}</view>
           <view class="point-category">{{item.category}}</view>
-          <image class="point-like" src="{{item.user_clock_state === 1 ? likeIcon : unLikeIcon}}"></image>
+          <image
+            class="point-like"
+            src="{{item.user_collection_state === 2 ? likeIcon : unLikeIcon}}"
+            data-item="{{item}}"
+            catchtap="changeCollection"
+          ></image>
         </view>
       </view>
     </view>

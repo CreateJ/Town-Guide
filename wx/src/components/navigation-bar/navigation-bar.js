@@ -17,8 +17,8 @@ Component({
     menuTop: app.globalData.menuTop,
     menuHeight: app.globalData.menuHeight,
     active: null,
-    button1Bg: '../../assets/image/point.png',
-    button2Bg: '../../assets/image/list.png',
+    button1Bg: '/assets/image/point.png',
+    button2Bg: '/assets/image/list.png',
     animationData: {},
     myAnimation: null,
     categoryList: [],
@@ -37,7 +37,7 @@ Component({
         this.setData({
           animationData: this.myAnimation.export(),
           active: null,
-          button1Bg: '../../assets/image/point.png'
+          button1Bg: '/assets/image/point.png'
         })
       } else {
         this.changeTo1()
@@ -55,8 +55,8 @@ Component({
       this.setData({
         active: 1,
         animationData: this.myAnimation.export(),
-        button1Bg: '../../assets/image/point-active.png',
-        button2Bg: '../../assets/image/list.png'
+        button1Bg: '/assets/image/point-active.png',
+        button2Bg: '/assets/image/list.png'
       })
     },
     changeTo2() {
@@ -64,8 +64,8 @@ Component({
       this.setData({
         active: 2,
         animationData: this.myAnimation.export(),
-        button2Bg: '../../assets/image/list-active.png',
-        button1Bg: '../../assets/image/point.png',
+        button2Bg: '/assets/image/list-active.png',
+        button1Bg: '/assets/image/point.png',
       })
     }
   },
@@ -77,14 +77,14 @@ Component({
       })
 
       wx.request({
-        url: 'https://guide.time-traveler.cn/category/getAll',
+        url: 'https://guide.time-traveler.cn:4443/category/getAll',
         method: 'GET',
         success: (res) => {
           let list = res.data.data.map(item => {
             return {
               name: item.name,
-              icon: 'https://guide.time-traveler.cn/utils/getPic/'+ item.icon,
-              iconActive: 'https://guide.time-traveler.cn/utils/getPic/'+ item.icon_active,
+              icon: 'https://guide.time-traveler.cn:4443/utils/getPic/'+ item.icon,
+              iconActive: 'https://guide.time-traveler.cn:4443/utils/getPic/'+ item.icon_active,
               id: item.id
             }
           })
