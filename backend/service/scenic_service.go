@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"github.com/kataras/iris/v12"
 	"town-guide/model"
 )
@@ -135,7 +136,10 @@ func (u *ScenicServiceApi) GetScenicByCategoryID(ctx iris.Context) {
 
 	for _, v := range *info {
 		temp := v
+
 		if model.GetUserClockState(dto.OpenID, temp.ID) {
+			fmt.Println(temp)
+			fmt.Println(dto)
 			temp.UserClockState = 2
 		}
 		if model.GetUserCollectionState(dto.OpenID, temp.ID) {
@@ -143,5 +147,5 @@ func (u *ScenicServiceApi) GetScenicByCategoryID(ctx iris.Context) {
 		}
 		result = append(result, temp)
 	}
-	_, _ = ctx.JSON(Response{SuccessCode, "", info})
+	_, _ = ctx.JSON(Response{SuccessCode, "", result})
 }
