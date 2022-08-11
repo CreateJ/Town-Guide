@@ -1,0 +1,21 @@
+<view class="nav-bar all-nav-height-container" animation="{{animationData}}" style="height:{{ navBarHeight }}px">
+  <view
+    class="button-box"
+    style="height:{{menuHeight}}px;min-height:{{menuHeight}}px;line-height:{{menuHeight}}px;top:{{menuTop}}px;"
+  >
+    <button class="header-button" style="background-image: url({{button1Bg}})" bindtap="clickCategory"></button>
+    <button class="header-button" style="background-image: url({{button2Bg}})" bindtap="clickList"></button>
+  </view>
+
+  <view wx:if="{{ active === 1 }}" class="categories-box" style="top: {{navBarHeight}}px">
+    <view wx:for="{{categoryList}}" wx:key="index" class="category-item" bindtap="clickCategoryItem"
+          data-type="{{item.id}}">
+      <image class="categories-image" src="{{ activeCategory !== item.id ? item.icon : item.iconActive}}" alt=""/>
+      <view style="color:{{activeCategory !== item.id ? '#aaa' : '#9EDFF2'}}">{{item.name}}</view>
+    </view>
+  </view>
+
+</view>
+
+<!-- 占位，高度与顶部栏一样 -->
+<view class="all-nav-height-container" animation="{{animationData}}" style="height:{{navBarHeight}}px;"></view>

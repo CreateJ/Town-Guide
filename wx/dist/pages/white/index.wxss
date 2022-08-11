@@ -1,0 +1,33 @@
+.white-container {
+  height: 100%;
+  position: relative;
+}
+
+.back-button-box {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0px 0px 15px rgba(204, 204, 204, 0.47);
+  background: white
+}
+
+.back-button {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  bottom: 8px;
+  left: 10px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+}
+
+.no-page {
+  height: 700px;
+  font-size: 40px;
+  font-weight: bolder;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ccc
+}
