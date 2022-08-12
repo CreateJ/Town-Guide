@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/nfnt/resize"
 	"image"
 	"image/jpeg"
 	"io"
@@ -164,11 +165,12 @@ func compressImageResource(data []byte, quality int) []byte {
 	if err != nil {
 		return data
 	}
+	set := resize.Resize(400, 300, img, resize.Lanczos3)
 	buf := bytes.Buffer{}
 	if quality == 0 {
-		quality = 80
+		quality = 50
 	}
-	err = jpeg.Encode(&buf, img, &jpeg.Options{Quality: quality})
+	err = jpeg.Encode(&buf, set, &jpeg.Options{Quality: quality})
 	if err != nil {
 		return data
 	}
