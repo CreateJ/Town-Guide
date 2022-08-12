@@ -60,10 +60,9 @@ type PicQuery struct {
 	Quality int `url:"quality"`
 }
 
-
 func (u *UtilServiceApi) GetPic(ctx iris.Context) {
 	picName := ctx.Params().Get("pic_name")
-	picQuery :=  PicQuery{}
+	picQuery := PicQuery{}
 	ctx.ReadQuery(&picQuery)
 
 	if picName == "" {
@@ -166,6 +165,9 @@ func compressImageResource(data []byte, quality int) []byte {
 		return data
 	}
 	buf := bytes.Buffer{}
+	if quality == 0 {
+		quality = 80
+	}
 	err = jpeg.Encode(&buf, img, &jpeg.Options{Quality: quality})
 	if err != nil {
 		return data
