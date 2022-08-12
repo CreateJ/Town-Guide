@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -75,7 +76,16 @@ func (u *UtilServiceApi) GetPic(ctx iris.Context) {
 	if err != nil {
 		return
 	}
-	_, _ = ctx.Write(compressImageResource(file, picQuery.Quality))
+	data :=compressImageResource(file, picQuery.Quality)
+	_, _ = ctx.Write(data)
+	out, err := os.OpenFile("./../file/pics/"+picName, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0666)
+	if err != nil {
+		return
+	}
+
+
+	write := bufio.NewWriter(out)
+		write.Write(data)
 }
 
 func (c *UtilServiceApi) GetMedia(ctx iris.Context) {
@@ -165,10 +175,10 @@ func compressImageResource(data []byte, quality int) []byte {
 	if err != nil {
 		return data
 	}
-	set := resize.Resize(320, 180, img, resize.Lanczos3)
+	set := resize.Resize(480, 270, img, resize.Lanczos3)
 	buf := bytes.Buffer{}
 	if quality == 0 {
-		quality = 40
+		quality = 60
 	}
 	err = jpeg.Encode(&buf, set, &jpeg.Options{Quality: quality})
 	if err != nil {
