@@ -1,7 +1,7 @@
 .scenic-container {
   min-height: 100%;
   position: relative;
-  /*background-color: #eee;*/
+  background-color: #eee;
 }
 
 .back-button-box {
@@ -70,6 +70,10 @@
   flex: 1;
   font-size: 14px;
   color: rgba(128, 128, 128, 1);
+}
+.card-clock-icon {
+  width: 90px;
+  height: 60px;
 }
 
 .card-button {

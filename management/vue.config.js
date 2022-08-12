@@ -39,7 +39,7 @@ module.exports = {
     before: require('./mock/mock-server.js'),
     proxy: {
       '/api': {
-        target: 'https://guide.time-traveler.cn',
+        target: 'https://guide.time-traveler.cn:4443',
         changeOrigin: true,
         pathRewrite: { '/api': '' }
       }

@@ -8,7 +8,20 @@
       id="easyMap"
       latitude="23.560987"
       longitude="116.829499"
+      bindmarkertap="clickMarkers"
+      bindcallouttap="clickCallOut"
+      bindlabeltap="clickLabel"
+      markers="{{markers}}"
     >
+<!--      <cover-view slot="callout">-->
+<!--        <block wx:for="{{customCalloutMarkerIds}}" wx:key="*this">-->
+<!--          <cover-view class="customCallout" marker-id="{{item}}">-->
+<!--            <cover-view class="content">-->
+<!--              {{num}}-{{item}}-{{index}}-->
+<!--            </cover-view>-->
+<!--          </cover-view>-->
+<!--        </block>-->
+<!--      </cover-view>-->
     </map>
   </view>
 </view>

@@ -1,5 +1,41 @@
-<!--scenic.wxml-->
 <view class="mine-container" style="padding-top: {{navBarHeight}}px">
-  <view class="block-wrap" style="height: {{navBarHeight}}px"></view>
-  <view class="info"></view>
+  <view class="back-button-box" style="height: {{navBarHeight}}px">
+<!--    <image class="back-button" src="../../../assets/image/back.png" bindtap="goBack"></image>-->
+  </view>
+  <view class="mine-header">
+    <image wx:if="{{isLogin}}" class="avatar" src="{{userInfo.avatar}}"></image>
+    <button wx:else class="login-button" bindtap="getUserProfile">请登录</button>
+    <view class="info">
+      <view class="user-name">{{userInfo.nick_name}}</view>
+      <view class="clock-num">已打卡{{10}}个景点！</view>
+    </view>
+  </view>
+  <view class="clock-banner" bindtap="goToMyClock">
+    <view class="clock-text">
+      <image class="clock-walker" src="/assets/image/scenic/walker.png"></image>
+      <view>我的打卡记录</view>
+    </view>
+    <image class="clock-background" src="/assets/image/clock-banner.png"></image>
+  </view>
+
+  <view class="card-info" bindtap="goToWhite">
+    <image class="card-icon" src="/assets/image/mine/call-me.png"></image>
+    <view class="card-text">万能客服</view>
+    <image class="card-icon" src="/assets/image/scenic/goto.png"></image>
+  </view>
+  <view class="card-info" bindtap="goToWhite">
+    <image class="card-icon" src="/assets/image/mine/call-back.png"></image>
+    <view class="card-text">意见反馈</view>
+    <image class="card-icon" src="/assets/image/scenic/goto.png"></image>
+  </view>
+  <view class="card-info" bindtap="goToWhite">
+    <image class="card-icon" src="/assets/image/mine/about-prod.png"></image>
+    <view class="card-text">关于产品</view>
+    <image class="card-icon" src="/assets/image/scenic/goto.png"></image>
+  </view>
+  <view class="card-info" bindtap="goToWhite">
+    <image class="card-icon" src="/assets/image/mine/join-us.png"></image>
+    <view class="card-text">加入我们</view>
+    <image class="card-icon" src="/assets/image/scenic/goto.png"></image>
+  </view>
 </view>

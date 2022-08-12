@@ -1,0 +1,54 @@
+<view class="clock-container" style="padding-top: {{navBarHeight}}px">
+  <view class="back-button-box" style="height: {{navBarHeight}}px">
+    <image class="back-button" src="/assets/image/back.png" bindtap="goBack"></image>
+  </view>
+  <view class="mine-header">
+    <image wx:if="{{isLogin}}" class="avatar" src="{{userInfo.avatar}}"></image>
+    <button wx:else class="login-button" bindtap="getUserProfile">请登录</button>
+    <view class="info">
+      <view class="user-name">{{userInfo.nick_name}}</view>
+      <view class="clock-num">已打卡{{10}}个景点！</view>
+    </view>
+  </view>
+  <view class="tab-type">
+    <view
+      class="tab-text {{activeType === 'clock' ? 'active' : ''}}"
+      data-type="clock"
+      bindtap="changeActiveType"
+    >
+      我的打卡
+    </view>
+    <view
+      class="tab-text"
+      class="tab-text {{activeType === 'collection' ? 'active' : ''}}"
+      data-type="collection"
+      bindtap="changeActiveType"
+    >
+      我的收藏
+    </view>
+  </view>
+  <view class="scenic-list">
+    <view
+      class="scenic-item"
+      wx:for="{{showData}}"
+      wx:key="id"
+      data-point="{{item}}"
+      catchtap="clickPointItem"
+    >
+      <image src="{{globalUrl}}/utils/getPic/{{item.icon}}" class="scenic-icon"></image>
+      <view class="scenic-info">
+        <view class="scenic-name">{{item.name}}</view>
+        <view class="scenic-text">
+          <span class="scenic-subtitle scenic-sub-info">地址：</span>
+          <span class="scenic-sub-info">{{item.location_desc}}</span>
+        </view>
+        <view class="scenic-text">
+          <span class="scenic-subtitle scenic-sub-info">介绍：</span>
+          <span class="scenic-sub-info">{{item.description}}</span>
+        </view>
+      </view>
+      <image src="{{globalUrl}}/utils/getPic/{{item.clock_icon}}" class="scenic-clock-icon"></image>
+
+    </view>
+  </view>
+</view>

@@ -1,12 +1,104 @@
 .mine-container {
-  height: 100vh;
-  display: flex;
-  flex-flow: column nowrap;
-  overflow: hidden;
+  height: 100%;
+  position: relative;
 }
 
-.block-wrap {
+.back-button-box {
   position: fixed;
-  top: 0;
   width: 100%;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0px 0px 15px rgba(204, 204, 204, 0.47);
+  background: white
 }
+
+.mine-header {
+  display: flex;
+  height: 140px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 24px;
+}
+
+.avatar {
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+}
+
+.mine-header .login-button {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info {
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.user-name {
+  font-size: 32px;
+  font-weight: bolder;
+  margin-bottom: 10px;
+}
+
+.clock-banner {
+  position: relative;
+  height: 80px;
+  width: 350px;
+  margin: 0 auto;
+}
+
+.clock-background {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.clock-text {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  height: 100%;
+  z-index: 100;
+  padding: 0 20px
+}
+
+.clock-walker {
+  height: 24px;
+  width: 24px;
+}
+
+.card-info {
+  height: 60px;
+  background: white;
+  margin: 12px 15px 0 15px;
+  display: flex;
+  align-items: center;
+  box-shadow: 2px 2px 4px 0px rgba(229, 229, 229, 0.25), -2px -2px 4px 0px rgba(229, 229, 229, 0.25);
+}
+
+.card-icon {
+  height: 24px;
+  width: 24px;
+  padding: 0 20px;
+}
+
+.card-text {
+  flex: 1;
+  font-size: 14px;
+  color: rgba(128, 128, 128, 1);
+}
+
+

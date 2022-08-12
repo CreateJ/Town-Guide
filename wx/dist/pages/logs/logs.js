@@ -1,7 +1,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 7:
+/***/ 9:
 /***/ ((module) => {
 
 const formatTime = date => {
@@ -56,7 +56,7 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
 // logs.js
-const util = __webpack_require__(7);
+const util = __webpack_require__(9);
 
 Page({
   data: {

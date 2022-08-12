@@ -5,15 +5,17 @@ const app = getApp()
 Page({
   data: {
     globalUrl: app.globalUrl,
-    msg: '你好',
     navBarHeight: app.globalData.navBarHeight,
     isLogin: true,
     openId: '',
-    userInfo: {}
+    userInfo: {},
+    activeType: 'clock',
+    showData: [],
+    CollectionScenicInfo: [],
+    ClockScenicInfo: []
   },
   // 事件处理函数
   onLoad() {
-    console.log(this.data.msg)
     const isLogin = wx.getStorageSync('isLogin')
     const openId = wx.getStorageSync('openId')
     this.setData({
@@ -62,21 +64,61 @@ Page({
       }
     })
   },
-  goToMyClock() {
-    console.log(12312312)
-    wx.navigateTo({
-      url: './clock/clock',
-      success: function (res) {
-        console.log(res)
-      },
-      fail(err) {
-        console.log(err)
+  goBack() {
+    wx.navigateBack()
+  },
+  changeActiveType(e) {
+    this.setData({
+      activeType: e.currentTarget.dataset.type
+    })
+    this.setShowData(e.currentTarget.dataset.type)
+
+  },
+  setShowData(type) {
+    if (type === 'clock') {
+      this.setData({
+        showData: this.data.ClockScenicInfo
+      })
+    } else {
+      this.setData({
+        showData: this.data.CollectionScenicInfo
+      })
+    }
+  },
+  onShow() {
+    this.initData()
+  },
+  initData() {
+    wx.request({
+      url: this.data.globalUrl + '/user/getUserDetail/' + wx.getStorageSync('openId'),
+      method: 'GET',
+      success: (res) => {
+        console.log(res.data.data)
+        this.setData({
+          CollectionScenicInfo: res.data.data.CollectionScenicInfo,
+          ClockScenicInfo: res.data.data.ClockScenicInfo
+        })
+        this.setShowData(this.data.activeType)
       }
     })
   },
-  goToWhite() {
+  clickPointItem(e) {
+    const that = this
+    console.log(e.currentTarget.dataset.point)
     wx.navigateTo({
-      url: '/pages/white/index'
+      url: '/pages/visits/scenic/scenic',
+      events: {
+        refreshPage: (data) => {
+          console.log(data)
+          that.getScenic(that.data.activeCategory)
+        }
+      },
+      success: function (res) {
+        // 通过 eventChannel 向被打开页面传送数据
+        res.eventChannel.emit('getPointData', {
+          data: e.currentTarget.dataset.point
+        })
+      }
     })
-  }
+  },
 })
