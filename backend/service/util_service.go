@@ -165,10 +165,10 @@ func compressImageResource(data []byte, quality int) []byte {
 	if err != nil {
 		return data
 	}
-	set := resize.Resize(400, 300, img, resize.Lanczos3)
+	set := resize.Resize(320, 180, img, resize.Lanczos3)
 	buf := bytes.Buffer{}
 	if quality == 0 {
-		quality = 50
+		quality = 40
 	}
 	err = jpeg.Encode(&buf, set, &jpeg.Options{Quality: quality})
 	if err != nil {
